@@ -1033,6 +1033,10 @@ const customerBalance = ref({
 })
 const loadingCredit = ref(false)
 
+// Fresh credit limit state (fetched when dialog opens, not from cache)
+const freshCreditLimit = ref(0)
+const loadingCreditLimit = ref(false)
+
 // Wallet state
 const walletInfo = ref({
 	wallet_enabled: false,
@@ -1048,12 +1052,11 @@ const deliveryDate = ref("")
 const today = new Date().toISOString().split("T")[0]
 const isSalesOrder = computed(() => props.targetDoctype === "Sales Order")
 
-// Check if customer has a credit limit set (for company-specific credit sales)
+// Check if customer has a credit limit set (uses fresh data fetched when dialog opens)
 const customerHasCreditLimit = computed(() => {
 	if (!props.customer) return false
-	// Customer can be an object with credit_limit or just a string ID
-	const creditLimit = props.customer?.credit_limit
-	return creditLimit !== undefined && creditLimit !== null && creditLimit > 0
+	// Use fresh credit limit fetched from server, not cached customer data
+	return freshCreditLimit.value > 0
 })
 
 // Column refs for height matching
@@ -1226,6 +1229,30 @@ const customerBalanceResource = createResource({
 			total_credit: 0,
 			net_balance: 0,
 		}
+	},
+})
+
+// Credit limit resource - fetches fresh credit limit from server (not cached)
+const creditLimitResource = createResource({
+	url: "pos_next.api.customers.get_customer_details",
+	makeParams() {
+		const customerName = props.customer?.name || props.customer
+		log.debug("[PaymentDialog] Fetching credit limit for customer:", customerName)
+		return {
+			customer: customerName,
+			company: props.company,
+		}
+	},
+	auto: false,
+	onSuccess(data) {
+		log.debug("[PaymentDialog] Customer credit limit loaded:", data?.credit_limit)
+		freshCreditLimit.value = data?.credit_limit || 0
+		loadingCreditLimit.value = false
+	},
+	onError(error) {
+		log.error("[PaymentDialog] Error loading customer credit limit:", error)
+		freshCreditLimit.value = 0
+		loadingCreditLimit.value = false
 	},
 })
 
@@ -1852,16 +1879,20 @@ watch(show, (newVal) => {
 
 		// Load customer credit and balance if enabled and customer is selected
 		if (props.allowCreditSale && props.customer && props.company) {
-			log.debug("[PaymentDialog] Loading customer credit and balance...")
+			log.debug("[PaymentDialog] Loading customer credit, balance, and credit limit...")
 			loadingCredit.value = true
+			loadingCreditLimit.value = true
 			customerCreditResource.fetch()
 			customerBalanceResource.fetch()
+			creditLimitResource.fetch() // Fetch fresh credit limit from server
 		} else {
 			log.debug("[PaymentDialog] Not loading credit because:", {
 				allowCreditSale: props.allowCreditSale,
 				hasCustomer: !!props.customer,
 				hasCompany: !!props.company,
 			})
+			// Reset credit limit when conditions not met
+			freshCreditLimit.value = 0
 		}
 
 		// Load wallet info if customer is selected
