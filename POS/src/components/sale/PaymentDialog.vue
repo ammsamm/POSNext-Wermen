@@ -682,7 +682,7 @@
 
 						<!-- Mobile Action Buttons - Always visible at bottom -->
 						<div :class="['flex-shrink-0', isSmallMobile ? 'space-y-1' : 'space-y-1.5']">
-							<!-- Two buttons side by side when both needed -->
+							<!-- Two buttons side by side when credit sale is enabled -->
 							<div v-if="lastSelectedMethod && remainingAmount > 0 && allowCreditSale && paymentEntries.length === 0"
 								class="grid grid-cols-2" :class="isSmallMobile ? 'gap-1' : 'gap-1.5'">
 								<!-- Pay Full Amount Button -->
@@ -698,13 +698,13 @@
 									</svg>
 									<span class="truncate">{{ formatCurrency(remainingAmount) }}</span>
 								</button>
-								<!-- Pay on Account Button -->
+								<!-- Pay on Account Button (disabled if customer has no credit limit) -->
 								<button
 									@click="addCreditAccountPayment"
-									:disabled="isSubmitting"
+									:disabled="!customerHasCreditLimit || isSubmitting"
 									:class="[
 										'font-semibold rounded-lg flex items-center justify-center',
-										isSubmitting
+										!customerHasCreditLimit || isSubmitting
 											? 'bg-orange-300 text-white cursor-not-allowed'
 											: 'bg-orange-500 text-white active:bg-orange-600',
 										mobileButtonSize.height, mobileButtonSize.text, mobileButtonSize.gap
@@ -864,15 +864,15 @@
 
 					<!-- Action Buttons - Below Keypad (Desktop only) -->
 					<div :class="['hidden lg:flex items-center gap-2', isCompactMode ? 'mt-2' : 'mt-4']">
-						<!-- Pay on Account Button (if credit sales enabled) -->
+						<!-- Pay on Account Button (if credit sales enabled, disabled if customer has no credit limit) -->
 						<button
 							v-if="allowCreditSale"
 							@click="addCreditAccountPayment"
-							:disabled="paymentEntries.length > 0 || isSubmitting"
+							:disabled="!customerHasCreditLimit || paymentEntries.length > 0 || isSubmitting"
 							:class="[
 								'flex-1 inline-flex items-center justify-center gap-2 transition-colors focus:outline-none',
 								dynamicButtonHeight, 'text-sm font-semibold px-4 rounded-lg',
-								paymentEntries.length > 0 || isSubmitting
+								!customerHasCreditLimit || paymentEntries.length > 0 || isSubmitting
 									? 'bg-orange-300 text-white cursor-not-allowed'
 									: 'bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700 focus-visible:ring-2 focus-visible:ring-orange-400'
 							]"
@@ -1047,6 +1047,14 @@ const walletPaymentMethods = ref(new Set()) // Set of mode_of_payment names that
 const deliveryDate = ref("")
 const today = new Date().toISOString().split("T")[0]
 const isSalesOrder = computed(() => props.targetDoctype === "Sales Order")
+
+// Check if customer has a credit limit set (for company-specific credit sales)
+const customerHasCreditLimit = computed(() => {
+	if (!props.customer) return false
+	// Customer can be an object with credit_limit or just a string ID
+	const creditLimit = props.customer?.credit_limit
+	return creditLimit !== undefined && creditLimit !== null && creditLimit > 0
+})
 
 // Column refs for height matching
 const rightColumnRef = ref(null)

@@ -5,6 +5,58 @@ Handles customer search, creation, and management for POS operations
 
 import frappe
 from frappe import _
+from frappe.utils import flt
+
+
+def get_customer_credit_limit(customer, company):
+    """
+    Get credit limit for a customer in a specific company.
+
+    Args:
+        customer (str): Customer ID
+        company (str): Company name
+
+    Returns:
+        float: Credit limit amount, or 0 if not set
+    """
+    if not customer or not company:
+        return 0
+
+    credit_limit = frappe.db.get_value(
+        "Customer Credit Limit",
+        {"parent": customer, "parenttype": "Customer", "company": company},
+        "credit_limit"
+    )
+
+    return flt(credit_limit)
+
+
+def get_credit_limits_for_customers(customer_names, company):
+    """
+    Get credit limits for multiple customers in a specific company.
+    Optimized for bulk fetching.
+
+    Args:
+        customer_names (list): List of customer IDs
+        company (str): Company name
+
+    Returns:
+        dict: Dictionary mapping customer name to credit limit
+    """
+    if not customer_names or not company:
+        return {}
+
+    credit_limits = frappe.get_all(
+        "Customer Credit Limit",
+        filters={
+            "parent": ["in", customer_names],
+            "parenttype": "Customer",
+            "company": company
+        },
+        fields=["parent", "credit_limit"]
+    )
+
+    return {row.parent: flt(row.credit_limit) for row in credit_limits}
 
 
 @frappe.whitelist()
@@ -19,7 +71,7 @@ def get_customers(search_term="", pos_profile=None, limit=20):
         limit (int): Maximum number of results to return
 
     Returns:
-        list: List of customer dictionaries with name, customer_name, mobile_no, email_id
+        list: List of customer dictionaries with name, customer_name, mobile_no, email_id, credit_limit
     """
     try:
         frappe.logger().debug(
@@ -27,11 +79,13 @@ def get_customers(search_term="", pos_profile=None, limit=20):
         )
 
         filters = {}
+        company = None
 
         # Filter by POS Profile customer group if specified
         if pos_profile:
             frappe.logger().debug(f"Loading POS Profile: {pos_profile}")
             profile_doc = frappe.get_cached_doc("POS Profile", pos_profile)
+            company = profile_doc.company
             # Check if customer_group field exists (it may not exist in all versions)
             if hasattr(profile_doc, "customer_group") and profile_doc.customer_group:
                 filters["customer_group"] = profile_doc.customer_group
@@ -47,6 +101,20 @@ def get_customers(search_term="", pos_profile=None, limit=20):
             limit=customer_limit,
             order_by="customer_name asc",
         )
+
+        # Fetch credit limits for all customers in bulk (if company is available)
+        if company and result:
+            customer_names = [c["name"] for c in result]
+            credit_limits = get_credit_limits_for_customers(customer_names, company)
+
+            # Add credit_limit to each customer
+            for customer in result:
+                customer["credit_limit"] = credit_limits.get(customer["name"], 0)
+        else:
+            # No company available, set credit_limit to 0
+            for customer in result:
+                customer["credit_limit"] = 0
+
         frappe.logger().debug(f"get_customers returned {len(result)} customers")
         return result
     except Exception as e:
@@ -182,17 +250,26 @@ def get_default_loyalty_program_from_settings():
 
 
 @frappe.whitelist()
-def get_customer_details(customer):
+def get_customer_details(customer, company=None):
     """
     Get detailed customer information.
 
     Args:
         customer (str): Customer ID
+        company (str): Company name (optional, used to get company-specific credit limit)
 
     Returns:
-        dict: Customer details
+        dict: Customer details including credit_limit for the specified company
     """
     if not customer:
         frappe.throw(_("Customer is required"))
 
-    return frappe.get_cached_doc("Customer", customer).as_dict()
+    customer_doc = frappe.get_cached_doc("Customer", customer).as_dict()
+
+    # Add company-specific credit limit
+    if company:
+        customer_doc["credit_limit"] = get_customer_credit_limit(customer, company)
+    else:
+        customer_doc["credit_limit"] = 0
+
+    return customer_doc
