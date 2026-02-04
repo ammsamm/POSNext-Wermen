@@ -50,6 +50,9 @@
   "allow_customer_purchase_order",
   "allow_duplicate_customer_names",
   "fetch_coupon",
+  "section_break_offers_coupons",
+  "enable_offers",
+  "enable_coupons",
   "section_break_printing",
   "allow_print_last_invoice",
   "silent_print",
@@ -382,6 +385,25 @@
    "fieldname": "fetch_coupon",
    "fieldtype": "Check",
    "label": "Auto Fetch Coupon Gifts"
+  },
+  {
+   "fieldname": "section_break_offers_coupons",
+   "fieldtype": "Section Break",
+   "label": "Offers & Coupons"
+  },
+  {
+   "default": "1",
+   "description": "Show the Offers button in the cart to view and apply promotional offers",
+   "fieldname": "enable_offers",
+   "fieldtype": "Check",
+   "label": "Enable Offers"
+  },
+  {
+   "default": "1",
+   "description": "Show the Coupon button in the cart to apply coupon codes and gift cards",
+   "fieldname": "enable_coupons",
+   "fieldtype": "Check",
+   "label": "Enable Coupons"
   },
   {
    "collapsible": 1,

@@ -69,7 +69,8 @@
 			<div ref="customerSearchContainer" class="relative">
 				<div v-if="customer">
 					<!-- Two Cards Layout: Customer Card + Document Type Card -->
-					<div class="flex items-stretch gap-2">
+					<!-- On mobile: stack vertically. On larger screens: side by side -->
+					<div class="flex flex-col sm:flex-row items-stretch gap-2">
 						<!-- Customer Card -->
 						<div class="flex-1 flex items-center gap-1.5 bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm min-w-0">
 							<!-- Customer Avatar & Info -->
@@ -163,9 +164,10 @@
 					</div>
 				</div>
 				<div v-else>
-					<div class="flex gap-1.5">
+					<!-- On mobile: wrap to stack doc type toggle on its own row -->
+					<div class="flex flex-wrap gap-1.5">
 						<!-- Search Input -->
-						<div class="relative flex-1">
+						<div class="relative flex-1 min-w-0">
 							<!-- Search Icon Prefix -->
 							<div
 								class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none"
@@ -232,14 +234,15 @@
 						</button>
 
 						<!-- Document Type Toggle (Sales Invoice / Sales Order) -->
+						<!-- On mobile: full width on its own row. On larger screens: inline -->
 						<div
 							v-if="settingsStore.allowSalesOrder"
-							class="flex items-center bg-gray-100 rounded-xl p-0.5 h-10"
+							class="flex items-center justify-center bg-gray-100 rounded-xl p-0.5 h-10 w-full sm:w-auto order-last sm:order-none"
 						>
 							<button
 								type="button"
 								@click="selectDocType('Sales Invoice')"
-								class="h-full px-2.5 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5"
+								class="h-full px-3 sm:px-2.5 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5 flex-1 sm:flex-initial justify-center"
 								:class="cartStore.targetDoctype === 'Sales Invoice'
 									? 'bg-white text-blue-600 shadow-sm'
 									: 'text-gray-500 hover:text-gray-700'"
@@ -248,12 +251,12 @@
 								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 								</svg>
-								<span class="hidden sm:inline">{{ __("Invoice") }}</span>
+								<span>{{ __("Invoice") }}</span>
 							</button>
 							<button
 								type="button"
 								@click="selectDocType('Sales Order')"
-								class="h-full px-2.5 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5"
+								class="h-full px-3 sm:px-2.5 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5 flex-1 sm:flex-initial justify-center"
 								:class="cartStore.targetDoctype === 'Sales Order'
 									? 'bg-white text-orange-600 shadow-sm'
 									: 'text-gray-500 hover:text-gray-700'"
@@ -262,7 +265,7 @@
 								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
 								</svg>
-								<span class="hidden sm:inline">{{ __("Order") }}</span>
+								<span>{{ __("Order") }}</span>
 							</button>
 						</div>
 					</div>
@@ -385,9 +388,10 @@
 			</div>
 
 			<!-- Offers & Coupon Buttons -->
-			<div class="flex gap-2">
+			<div v-if="settingsStore.enableOffers || settingsStore.enableCoupons" class="flex gap-2">
 				<!-- View All Offers Button -->
 				<button
+					v-if="settingsStore.enableOffers"
 					type="button"
 					@click="$emit('show-offers')"
 					class="relative flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 hover:border-green-400 hover:from-green-100 hover:to-emerald-100 hover:shadow-sm transition-all min-w-0 touch-manipulation active:scale-[0.98]"
@@ -419,6 +423,7 @@
 
 				<!-- Enter Coupon Code Button -->
 				<button
+					v-if="settingsStore.enableCoupons"
 					type="button"
 					@click="$emit('apply-coupon')"
 					class="relative flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-200 hover:border-purple-400 hover:from-purple-100 hover:to-violet-100 hover:shadow-sm transition-all min-w-0 touch-manipulation active:scale-[0.98]"
