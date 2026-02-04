@@ -2,8 +2,6 @@
 # Copyright (c) 2024, POS Next and contributors
 # For license information, please see license.txt
 
-import os
-import csv
 import frappe
 from frappe import translate
 
@@ -12,8 +10,7 @@ from frappe import translate
 def get_app_translations(locale=None):
 	"""
 	Get all translations for the specified or current user's language.
-	Merges Frappe's translations with pos_next app translations,
-	ensuring pos_next translations take precedence.
+	Uses Frappe's standard translation system.
 
 	Args:
 		locale (str, optional): Language code. If not provided, uses user's current language.
@@ -26,21 +23,7 @@ def get_app_translations(locale=None):
 	else:
 		lang = frappe.local.lang or "en"
 
-	# Get base translations from Frappe (includes all apps)
-	all_translations = translate.get_all_translations(lang) or {}
-
-	# Override with pos_next specific translations to ensure they take precedence
-	app_path = frappe.get_app_path("pos_next")
-	csv_path = os.path.join(app_path, "translations", f"{lang}.csv")
-
-	if os.path.exists(csv_path):
-		with open(csv_path, "r", encoding="utf-8") as f:
-			reader = csv.reader(f)
-			for row in reader:
-				if len(row) >= 2 and row[0] and row[1]:
-					all_translations[row[0]] = row[1]
-
-	return all_translations
+	return translate.get_all_translations(lang) or {}
 
 
 @frappe.whitelist()
