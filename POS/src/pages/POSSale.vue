@@ -1,7 +1,7 @@
 <template>
 	<div
-		class="flex flex-col bg-gray-50 overflow-x-hidden"
-		style="height: 100vh; max-height: 100vh"
+		class="flex flex-col bg-gray-50 overflow-hidden"
+		style="height: 100dvh; max-height: 100dvh"
 	>
 		<!-- Loading State -->
 		<LoadingSpinner v-if="uiStore.isLoading" />
@@ -170,7 +170,7 @@
 			<div
 				v-if="shiftStore.hasOpenShift"
 				class="flex-1 flex overflow-hidden relative"
-				style="max-height: calc(100vh - var(--header-height, 60px))"
+				style="max-height: calc(100dvh - var(--header-height, 60px))"
 			>
 				<!-- Icon-Only Management Slider - Always Visible -->
 				<ManagementSlider @menu-clicked="handleManagementMenuClick" />
@@ -395,7 +395,7 @@
 			<div
 				v-else
 				class="flex-1 flex items-center justify-center bg-gray-50"
-				style="max-height: calc(100vh - var(--header-height, 60px))"
+				style="max-height: calc(100dvh - var(--header-height, 60px))"
 			>
 				<div class="text-center">
 					<div

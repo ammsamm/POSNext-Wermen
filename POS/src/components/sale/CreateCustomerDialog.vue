@@ -43,7 +43,7 @@
 							<!-- Country Search Dropdown -->
 							<div
 								v-if="showCountryDropdown"
-								class="absolute left-0 z-50 mt-1 w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+								class="absolute left-0 z-50 mt-1 w-72 sm:w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
 							>
 								<div class="sticky top-0 bg-white border-b border-gray-200 p-2">
 									<input
@@ -62,17 +62,17 @@
 										:key="country.code"
 										type="button"
 										@click="selectCountry(country)"
-										class="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors text-left"
+										class="w-full flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 transition-colors text-left"
 										:class="{ 'bg-blue-50': selectedCountryCode === country.isd }"
 									>
 										<img
 											:src="`https://flagcdn.com/h24/${country.code.toLowerCase()}.png`"
 											:alt="country.name"
-											class="w-6 h-auto rounded-sm shadow-sm"
+											class="w-5 h-auto rounded-sm shadow-sm flex-shrink-0"
 											@error="(e) => (e.target.style.display = 'none')"
 										/>
-										<span class="flex-1 text-sm font-medium text-gray-700">{{ country.name }}</span>
-										<span class="text-sm text-gray-500">{{ country.isd }}</span>
+										<span class="flex-1 text-sm font-medium text-gray-700 truncate">{{ country.name }}</span>
+										<span class="text-sm text-gray-500 flex-shrink-0">{{ country.isd }}</span>
 									</button>
 									<div v-if="filteredCountries.length === 0" class="px-4 py-8 text-center text-sm text-gray-500">
 										{{ __("No countries found") }}
