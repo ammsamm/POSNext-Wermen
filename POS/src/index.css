@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lateef:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
 @import "./assets/Inter/inter.css";
 @import "frappe-ui/style.css";
 @import "@abdulrysr/saudi-riyal-new-symbol-font/style.css";
@@ -10,9 +10,9 @@
 	--z-dropdown: 10000;
 }
 
-/* Apply Lateef font with Saudi Riyal symbol support */
+/* Apply Rubik font with Saudi Riyal symbol support */
 body {
-	font-family: "Lateef", "SaudiRiyalSymbol", "Tahoma", sans-serif;
+	font-family: "Rubik", "SaudiRiyalSymbol", "Tahoma", sans-serif;
 }
 
 /* Ensure all text elements inherit the font stack with Saudi Riyal support */
