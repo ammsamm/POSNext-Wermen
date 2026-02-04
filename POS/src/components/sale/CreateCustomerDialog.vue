@@ -43,7 +43,8 @@
 							<!-- Country Search Dropdown -->
 							<div
 								v-if="showCountryDropdown"
-								class="absolute left-0 z-50 mt-1 w-72 sm:w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+								class="fixed sm:absolute left-4 right-4 sm:left-0 sm:right-auto z-50 mt-1 sm:w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+								style="max-width: calc(100vw - 2rem)"
 							>
 								<div class="sticky top-0 bg-white border-b border-gray-200 p-2">
 									<input
