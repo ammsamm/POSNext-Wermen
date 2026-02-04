@@ -282,7 +282,7 @@
 									<div class="flex-1 min-w-0 text-start">
 										<div class="font-medium text-sm text-gray-900 truncate">{{ item.item_name || item.item_code }}</div>
 										<div class="text-xs text-gray-500 mt-0.5">
-											{{ formatCurrency(item.rate || item.price_list_rate) }} × {{ item.qty || item.quantity }}
+											{{ formatCurrency(item.rate || item.price_list_rate) }} × {{ item.qty || item.quantity }} {{ item.uom || item.stock_uom || '' }}
 										</div>
 									</div>
 									<div class="text-sm font-semibold text-gray-900 text-end">
