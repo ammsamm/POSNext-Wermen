@@ -20,13 +20,13 @@
 					<label class="block text-start text-sm font-medium text-gray-700 mb-2">
 						{{ __("Mobile Number") }}
 					</label>
-					<div class="flex gap-2">
+					<div class="flex flex-col sm:flex-row gap-2" dir="ltr">
 						<!-- Country Code Dropdown -->
 						<div class="relative" ref="dropdownRef">
 							<button
 								type="button"
 								@click="showCountryDropdown = !showCountryDropdown"
-								class="flex items-center gap-1 w-24 ps-2 pe-1 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white hover:bg-gray-50"
+								class="flex items-center gap-1 w-full sm:w-28 px-2 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white hover:bg-gray-50"
 							>
 								<img
 									:src="`https://flagcdn.com/h24/${currentCountryCode}.png`"
@@ -34,7 +34,7 @@
 									class="w-6 h-auto rounded-sm"
 									@error="handleFlagError"
 								/>
-								<span class="flex-1 text-start">{{ selectedCountryCode || "+20" }}</span>
+								<span class="flex-1 text-left">{{ selectedCountryCode || "+20" }}</span>
 								<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 								</svg>
@@ -43,15 +43,16 @@
 							<!-- Country Search Dropdown -->
 							<div
 								v-if="showCountryDropdown"
-								class="absolute start-0 z-50 mt-1 w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+								class="absolute left-0 z-50 mt-1 w-80 max-h-80 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
 							>
 								<div class="sticky top-0 bg-white border-b border-gray-200 p-2">
 									<input
 										ref="countrySearchRef"
 										v-model="countrySearchQuery"
 										type="text"
+										dir="ltr"
 										:placeholder="__('Search country or code...')"
-										class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+										class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-left"
 										@keydown.escape="showCountryDropdown = false"
 									/>
 								</div>
@@ -61,7 +62,7 @@
 										:key="country.code"
 										type="button"
 										@click="selectCountry(country)"
-										class="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors text-start"
+										class="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 transition-colors text-left"
 										:class="{ 'bg-blue-50': selectedCountryCode === country.isd }"
 									>
 										<img
@@ -84,8 +85,9 @@
 						<input
 							v-model="phoneNumber"
 							type="tel"
+							dir="ltr"
 							:placeholder="__('Enter phone number')"
-							class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-start"
+							class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left"
 							@input="updateMobileNumber"
 						/>
 					</div>
