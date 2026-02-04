@@ -83,6 +83,10 @@ export default function translationPlugin(app: App) {
  * Resolves a translation for the provided key.
  * Supports indexed placeholders and contextual translations.
  *
+ * IMPORTANT: This function accesses translationVersion.value to create
+ * a reactive dependency. This ensures Vue components re-render when
+ * translations change (e.g., when language is switched).
+ *
  * @param msg - Source string to translate
  * @param replace - Indexed placeholder values (e.g., {0}, {1})
  * @param ctx - Optional context for disambiguation
@@ -99,6 +103,11 @@ export default function translationPlugin(app: App) {
  * __('Save', null, 'button')  // Uses key "Save:button"
  */
 export function translate(msg: string, replace?: Record<string, string>, ctx?: string | null): string {
+  // Access translationVersion.value to create a reactive dependency
+  // This ensures Vue templates re-render when translations change
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  translationVersion.value
+
   const messages = window.translatedMessages || {}
   const key = ctx ? `${msg}:${ctx}` : msg
   let translated = messages[key] || messages[msg] || msg

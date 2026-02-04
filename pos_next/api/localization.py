@@ -2,6 +2,8 @@
 # Copyright (c) 2024, POS Next and contributors
 # For license information, please see license.txt
 
+import os
+import csv
 import frappe
 from frappe import translate
 
@@ -10,8 +12,8 @@ from frappe import translate
 def get_app_translations(locale=None):
 	"""
 	Get all translations for the specified or current user's language.
-	This is a wrapper around frappe.translate.get_all_translations
-	since the original function is not whitelisted.
+	Merges Frappe's translations with pos_next app translations,
+	ensuring pos_next translations take precedence.
 
 	Args:
 		locale (str, optional): Language code. If not provided, uses user's current language.
@@ -23,7 +25,31 @@ def get_app_translations(locale=None):
 		lang = locale.lower()
 	else:
 		lang = frappe.local.lang or "en"
-	return translate.get_all_translations(lang)
+
+	# Get base translations from Frappe (includes all apps)
+	all_translations = translate.get_all_translations(lang) or {}
+
+	# Override with pos_next specific translations to ensure they take precedence
+	app_path = frappe.get_app_path("pos_next")
+	csv_path = os.path.join(app_path, "translations", f"{lang}.csv")
+
+	# Debug: Add path info to help diagnose
+	all_translations["__debug_csv_path"] = csv_path
+	all_translations["__debug_csv_exists"] = str(os.path.exists(csv_path))
+
+	if os.path.exists(csv_path):
+		count = 0
+		with open(csv_path, "r", encoding="utf-8") as f:
+			reader = csv.reader(f)
+			for row in reader:
+				if len(row) >= 2 and row[0] and row[1]:
+					all_translations[row[0]] = row[1]
+					count += 1
+		all_translations["__debug_loaded_count"] = str(count)
+	else:
+		all_translations["__debug_loaded_count"] = "0 (file not found)"
+
+	return all_translations
 
 
 @frappe.whitelist()
