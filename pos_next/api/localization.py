@@ -7,16 +7,22 @@ from frappe import translate
 
 
 @frappe.whitelist()
-def get_app_translations():
+def get_app_translations(locale=None):
 	"""
-	Get all translations for the current user's language.
+	Get all translations for the specified or current user's language.
 	This is a wrapper around frappe.translate.get_all_translations
 	since the original function is not whitelisted.
+
+	Args:
+		locale (str, optional): Language code. If not provided, uses user's current language.
 
 	Returns:
 		dict: Translation dictionary {source: translated}
 	"""
-	lang = frappe.local.lang or "en"
+	if locale:
+		lang = locale.lower()
+	else:
+		lang = frappe.local.lang or "en"
 	return translate.get_all_translations(lang)
 
 

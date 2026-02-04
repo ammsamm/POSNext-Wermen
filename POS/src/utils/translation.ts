@@ -149,10 +149,11 @@ function applyMessages(messages: Messages) {
 
 /**
  * Fetches translations from Frappe API.
+ * @param locale - Language code to fetch translations for
  * @returns Translation dictionary or null on failure
  */
-async function requestTranslations() {
-  const messages = await call("pos_next.api.localization.get_app_translations", {})
+async function requestTranslations(locale?: string) {
+  const messages = await call("pos_next.api.localization.get_app_translations", { locale })
   return (messages as Messages) || null
 }
 
@@ -185,7 +186,7 @@ async function loadLocale(locale: string, options: LoadOptions = {}) {
     }
   }
 
-  const entry = await translationCache.getFresh(target, () => requestTranslations(), {
+  const entry = await translationCache.getFresh(target, () => requestTranslations(target), {
     force: forceNetwork,
   })
 
@@ -200,12 +201,13 @@ async function loadLocale(locale: string, options: LoadOptions = {}) {
 /**
  * Fallback translation loader using frappe-ui's createResource.
  * Used when direct API calls fail (e.g., CORS issues, auth problems).
- * @param locale - Locale code for logging
+ * @param locale - Locale code to fetch translations for
  */
 function fallbackFetch(locale?: string) {
   createResource({
     url: "pos_next.api.localization.get_app_translations",
     method: "GET",
+    params: { locale: locale || FALLBACK_LOCALE },
     cache: "translations",
     auto: true,
     transform: (messages: Messages) => applyMessages(messages),
