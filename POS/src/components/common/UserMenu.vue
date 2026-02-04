@@ -118,6 +118,19 @@
 				</svg>
 				<span class="mx-4">{{ __('Logout') }}</span>
 			</button>
+
+			<!-- Powered by BrainWise -->
+			<hr class="my-2 border-gray-100">
+			<div class="px-4 py-2 text-center text-xs text-gray-500">
+				<span>Powered by </span>
+				<a
+					href="https://nexus.brainwise.me"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-blue-500 hover:text-blue-600 font-semibold"
+					@click.stop
+				>BrainWise</a>
+			</div>
 		</div>
 	</div>
 </template>
