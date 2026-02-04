@@ -126,15 +126,16 @@
 						</div>
 
 						<!-- Document Type Card -->
+						<!-- On mobile: full width. On larger screens: shrink to fit -->
 						<div
 							v-if="settingsStore.allowSalesOrder"
-							class="flex items-center bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm flex-shrink-0"
+							class="flex items-center justify-center bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm w-full sm:w-auto sm:flex-shrink-0"
 						>
-							<div class="flex items-center bg-gray-100 rounded-lg p-0.5">
+							<div class="flex items-center bg-gray-100 rounded-lg p-0.5 w-full sm:w-auto">
 								<button
 									type="button"
 									@click="selectDocType('Sales Invoice')"
-									class="px-2.5 py-1.5 text-[11px] font-semibold rounded-md transition-all duration-200 flex items-center gap-1"
+									class="px-3 sm:px-2.5 py-1.5 text-[11px] font-semibold rounded-md transition-all duration-200 flex items-center justify-center gap-1 flex-1 sm:flex-initial"
 									:class="cartStore.targetDoctype === 'Sales Invoice'
 										? 'bg-white text-blue-600 shadow-sm'
 										: 'text-gray-500 hover:text-gray-700'"
@@ -148,7 +149,7 @@
 								<button
 									type="button"
 									@click="selectDocType('Sales Order')"
-									class="px-2.5 py-1.5 text-[11px] font-semibold rounded-md transition-all duration-200 flex items-center gap-1"
+									class="px-3 sm:px-2.5 py-1.5 text-[11px] font-semibold rounded-md transition-all duration-200 flex items-center justify-center gap-1 flex-1 sm:flex-initial"
 									:class="cartStore.targetDoctype === 'Sales Order'
 										? 'bg-white text-orange-600 shadow-sm'
 										: 'text-gray-500 hover:text-gray-700'"
@@ -388,10 +389,9 @@
 			</div>
 
 			<!-- Offers & Coupon Buttons -->
-			<div v-if="settingsStore.enableOffers || settingsStore.enableCoupons" class="flex gap-2">
+			<div class="flex gap-2">
 				<!-- View All Offers Button -->
 				<button
-					v-if="settingsStore.enableOffers"
 					type="button"
 					@click="$emit('show-offers')"
 					class="relative flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 hover:border-green-400 hover:from-green-100 hover:to-emerald-100 hover:shadow-sm transition-all min-w-0 touch-manipulation active:scale-[0.98]"
@@ -423,7 +423,6 @@
 
 				<!-- Enter Coupon Code Button -->
 				<button
-					v-if="settingsStore.enableCoupons"
 					type="button"
 					@click="$emit('apply-coupon')"
 					class="relative flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-lg bg-gradient-to-r from-purple-50 to-violet-50 border border-purple-200 hover:border-purple-400 hover:from-purple-100 hover:to-violet-100 hover:shadow-sm transition-all min-w-0 touch-manipulation active:scale-[0.98]"
