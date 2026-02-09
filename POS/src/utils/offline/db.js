@@ -78,6 +78,15 @@ const CURRENT_SCHEMA = {
 	// Unpaid invoices cache for offline viewing
 	// Stores invoices with outstanding amounts for partial payment management
 	unpaid_invoices: "&name, pos_profile, outstanding_amount, customer",
+
+	// Expense categories cache for offline form autocomplete
+	expense_categories: "&name, category_name",
+
+	// Expenses cache (server-synced + offline-created)
+	expenses_cache: "&name, employee, category, expense_date, docstatus, *offline_id",
+
+	// Expense queue for offline-created expenses (same pattern as invoice_queue)
+	expense_queue: "++id, offline_id, timestamp, synced",
 }
 
 /**

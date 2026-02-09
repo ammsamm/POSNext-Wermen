@@ -63,6 +63,8 @@
   "allow_submissions_in_background_job",
   "allow_delete_offline_invoice",
   "allow_change_posting_date",
+  "section_break_expenses",
+  "enable_expenses",
   "section_break_misc",
   "input_qty",
   "allow_negative_stock",
@@ -467,6 +469,19 @@
    "fieldname": "allow_change_posting_date",
    "fieldtype": "Check",
    "label": "Allow Change Posting Date"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_expenses",
+   "fieldtype": "Section Break",
+   "label": "Expenses"
+  },
+  {
+   "default": "0",
+   "description": "Enable expense management in POS interface. Requires the erpnext_expenses app to be installed.",
+   "fieldname": "enable_expenses",
+   "fieldtype": "Check",
+   "label": "Enable Expenses"
   },
   {
    "collapsible": 1,

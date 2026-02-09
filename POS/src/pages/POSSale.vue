@@ -622,6 +622,12 @@
 				@refresh-history="loadInvoiceHistoryData"
 			/>
 
+			<!-- Expense Management -->
+			<ExpenseManagement
+				v-model="showExpenseManagement"
+				:currency="shiftStore.profileCurrency"
+			/>
+
 			<!-- Invoice Detail Dialog -->
 			<InvoiceDetailDialog
 				v-model="showInvoiceDetail"
@@ -955,6 +961,7 @@ import WarehouseAvailabilityDialog from "@/components/sale/WarehouseAvailability
 import POSSettings from "@/components/settings/POSSettings.vue";
 import InvoiceManagement from "@/components/invoices/InvoiceManagement.vue";
 import InvoiceDetailDialog from "@/components/invoices/InvoiceDetailDialog.vue";
+import ExpenseManagement from "@/components/expenses/ExpenseManagement.vue";
 import { useRealtimeStock } from "@/composables/useRealtimeStock";
 import { usePOSEvents } from "@/composables/usePOSEvents";
 import { useLocale } from "@/composables/useLocale";
@@ -1058,6 +1065,9 @@ const showStockLookup = ref(false);
 
 // Invoice Management dialog
 const showInvoiceManagement = ref(false);
+
+// Expense Management dialog
+const showExpenseManagement = ref(false);
 
 // Invoice Detail dialog
 const showInvoiceDetail = ref(false);
@@ -2497,6 +2507,8 @@ function handleManagementMenuClick(menuItem) {
 		// Load drafts data
 		draftsStore.loadDrafts();
 		showInvoiceManagement.value = true;
+	} else if (menuItem === "expenses") {
+		showExpenseManagement.value = true;
 	} else if (menuItem === "products") {
 		// Open Stock Lookup dialog in search mode
 		showStockLookup.value = true;

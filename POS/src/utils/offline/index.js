@@ -47,6 +47,22 @@ export {
 	clearCustomersCache,
 } from "./items"
 
+// Expense offline support
+export {
+	cacheExpenseCategories,
+	getCachedCategories,
+	cacheExpenses,
+	getCachedExpenses,
+	cacheExpenseReports,
+	getCachedExpenseReports,
+	queueOfflineExpense,
+	getPendingExpenses,
+	getPendingCount,
+	markExpenseSynced,
+	deleteQueuedExpense,
+	syncOfflineExpenses,
+} from "./expenses"
+
 // New cache system exports (excluding setManualOffline/toggleManualOffline - use offlineState instead)
 export {
 	memory,
