@@ -83,7 +83,7 @@ const CURRENT_SCHEMA = {
 	expense_categories: "&name, category_name",
 
 	// Expenses cache (server-synced + offline-created)
-	expenses_cache: "&name, employee, category, expense_date, docstatus, *offline_id",
+	expenses_cache: "&name, employee, category, expense_date, docstatus, offline_id",
 
 	// Expense queue for offline-created expenses (same pattern as invoice_queue)
 	expense_queue: "++id, offline_id, timestamp, synced",
@@ -236,6 +236,7 @@ export const setSetting = async (key, value) => {
  * @param {boolean} options.preserveInvoices - Keep invoice queue (default: true)
  * @param {boolean} options.preserveDrafts - Keep drafts (default: true)
  * @param {boolean} options.preserveSettings - Keep settings (default: true)
+ * @param {boolean} options.preserveExpenseQueue - Keep expense queue (default: true)
  * @returns {Promise<Object>} - Status of cleared tables
  */
 export const clearCachedData = async (options = {}) => {
@@ -243,6 +244,7 @@ export const clearCachedData = async (options = {}) => {
 		preserveInvoices = true,
 		preserveDrafts = true,
 		preserveSettings = true,
+		preserveExpenseQueue = true,
 	} = options
 
 	const results = {
@@ -255,6 +257,9 @@ export const clearCachedData = async (options = {}) => {
 		payments: 0,
 		drafts: 0,
 		settings: 0,
+		expense_categories: 0,
+		expenses_cache: 0,
+		expense_queue: 0,
 	}
 
 	try {
@@ -264,6 +269,13 @@ export const clearCachedData = async (options = {}) => {
 		results.stock = await db.stock.clear()
 		results.item_prices = await db.item_prices.clear()
 		results.payment_methods = await db.payment_methods.clear()
+		results.expense_categories = await db.expense_categories.clear()
+		results.expenses_cache = await db.expenses_cache.clear()
+
+		// Conditionally clear expense queue (preserve by default like invoice_queue)
+		if (!preserveExpenseQueue) {
+			results.expense_queue = await db.expense_queue.clear()
+		}
 
 		// Conditionally clear invoice and payment queues
 		if (!preserveInvoices) {

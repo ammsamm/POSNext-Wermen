@@ -12,24 +12,45 @@ import frappe
 from frappe import _
 
 
-@frappe.whitelist()
-def get_employee_info():
-    """Get current user's employee record for expense creation."""
+def _get_current_employee():
+    """Get the current user's employee record. Returns dict or None."""
     user = frappe.session.user
-    employee = frappe.db.get_value(
+    return frappe.db.get_value(
         "Employee",
         {"user_id": user, "status": "Active"},
         ["name", "employee_name", "company"],
         as_dict=True,
     )
+
+
+def _validate_employee_access(employee):
+    """Validate that the requested employee matches the current user's employee record."""
+    current = _get_current_employee()
+    if not current or current.name != employee:
+        frappe.throw(
+            _("You can only access your own expenses."),
+            frappe.PermissionError,
+        )
+    return current
+
+
+@frappe.whitelist()
+def get_employee_info():
+    """Get current user's employee record for expense creation."""
+    employee = _get_current_employee()
     if not employee:
-        frappe.throw(_("No active Employee record found for user {0}").format(user))
+        frappe.throw(
+            _("No active Employee record found for user {0}").format(
+                frappe.session.user
+            )
+        )
     return employee
 
 
 @frappe.whitelist()
 def get_expenses(employee, limit=100):
     """Get expense list for an employee."""
+    _validate_employee_access(employee)
     return frappe.get_list(
         "Expense",
         filters={"employee": employee},
@@ -54,6 +75,7 @@ def get_expenses(employee, limit=100):
 @frappe.whitelist()
 def get_expense_reports(employee, limit=50):
     """Get expense reports for an employee."""
+    _validate_employee_access(employee)
     return frappe.get_list(
         "Expense Report",
         filters={"employee": employee},
@@ -95,9 +117,17 @@ def get_paid_by_options():
 @frappe.whitelist()
 def create_report(expense, details=None):
     """Create expense report from a single expense - proxy to erpnext_expenses."""
-    from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
-        create_expense_report,
-    )
+    try:
+        from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
+            create_expense_report,
+        )
+    except ImportError:
+        frappe.throw(
+            _(
+                "The erpnext_expenses app is required for creating expense reports. "
+                "Please install it."
+            )
+        )
 
     return create_expense_report(expense, details)
 
@@ -105,8 +135,16 @@ def create_report(expense, details=None):
 @frappe.whitelist()
 def create_bulk_report(selected):
     """Create bulk expense report from multiple expenses - proxy to erpnext_expenses."""
-    from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
-        create_bulk_expense_report,
-    )
+    try:
+        from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
+            create_bulk_expense_report,
+        )
+    except ImportError:
+        frappe.throw(
+            _(
+                "The erpnext_expenses app is required for creating expense reports. "
+                "Please install it."
+            )
+        )
 
     return create_bulk_expense_report(selected)

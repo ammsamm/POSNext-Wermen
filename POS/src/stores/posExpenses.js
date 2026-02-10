@@ -9,11 +9,14 @@ import {
 	getCachedExpenses,
 	cacheExpenseReports,
 	getCachedExpenseReports,
+	cachePaidByOptions,
+	getCachedPaidByOptions,
 	queueOfflineExpense,
 	getPendingExpenses,
 	getPendingCount,
 	deleteQueuedExpense,
 	syncOfflineExpenses,
+	generateOfflineExpenseName,
 } from "@/utils/offline/expenses"
 import { logger } from "@/utils/logger"
 
@@ -82,7 +85,7 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 				const offlineEntries = pending
 					.filter((p) => !p.synced)
 					.map((p) => ({
-						name: `OFFLINE-EXP-${p.offline_id.replace("pos_offline_", "").slice(0, 8)}`,
+						name: generateOfflineExpenseName(p.offline_id),
 						offline_id: p.offline_id,
 						...p.data,
 						docstatus: 0,
@@ -168,9 +171,17 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 			if (!isOffline()) {
 				const result = await call("pos_next.api.expenses.get_paid_by_options")
 				paidByOptions.value = result || []
+				await cachePaidByOptions(result || [])
+			} else {
+				paidByOptions.value = await getCachedPaidByOptions()
 			}
 		} catch (error) {
 			log.error("Failed to load paid_by options:", error)
+			try {
+				paidByOptions.value = await getCachedPaidByOptions()
+			} catch (cacheError) {
+				paidByOptions.value = []
+			}
 		}
 	}
 

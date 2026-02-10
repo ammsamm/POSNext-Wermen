@@ -49,12 +49,15 @@ export {
 
 // Expense offline support
 export {
+	generateOfflineExpenseName,
 	cacheExpenseCategories,
 	getCachedCategories,
 	cacheExpenses,
 	getCachedExpenses,
 	cacheExpenseReports,
 	getCachedExpenseReports,
+	cachePaidByOptions,
+	getCachedPaidByOptions,
 	queueOfflineExpense,
 	getPendingExpenses,
 	getPendingCount,

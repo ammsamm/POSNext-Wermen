@@ -190,6 +190,7 @@ watch(
 				}
 			} else {
 				form.value = getDefaultForm()
+				form.value.paid_by = defaultPaidBy
 			}
 		}
 	}

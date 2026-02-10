@@ -18,6 +18,50 @@ import { call } from "../apiWrapper"
 const log = logger.create("OfflineExpenses")
 
 // ==========================================
+// Helpers
+// ==========================================
+
+/**
+ * Generate a display name for an offline expense from its offline_id.
+ * @param {string} offline_id - The offline UUID
+ * @returns {string} Display name like "OFFLINE-EXP-abcd1234"
+ */
+export function generateOfflineExpenseName(offline_id) {
+	return `OFFLINE-EXP-${offline_id.replace("pos_offline_", "").slice(0, 8)}`
+}
+
+// ==========================================
+// Paid By Options Caching
+// ==========================================
+
+/**
+ * Cache paid_by options to IndexedDB for offline form use.
+ * @param {Array<string>} options - Array of paid_by option strings
+ * @returns {Promise<void>}
+ */
+export async function cachePaidByOptions(options) {
+	try {
+		await setSetting("expense_paid_by_options", options)
+		log.debug(`Cached ${options?.length || 0} paid_by options`)
+	} catch (error) {
+		log.error("Failed to cache paid_by options:", error)
+	}
+}
+
+/**
+ * Get cached paid_by options from IndexedDB.
+ * @returns {Promise<Array<string>>} Cached paid_by options
+ */
+export async function getCachedPaidByOptions() {
+	try {
+		return (await getSetting("expense_paid_by_options")) || []
+	} catch (error) {
+		log.error("Failed to get cached paid_by options:", error)
+		return []
+	}
+}
+
+// ==========================================
 // Category Caching
 // ==========================================
 
@@ -137,7 +181,7 @@ export async function getCachedExpenseReports(employee) {
 export async function queueOfflineExpense(expenseData) {
 	const offline_id = generateOfflineId()
 	const timestamp = Date.now()
-	const offlineName = `OFFLINE-EXP-${offline_id.replace("pos_offline_", "").slice(0, 8)}`
+	const offlineName = generateOfflineExpenseName(offline_id)
 
 	try {
 		// Add to expense queue
@@ -220,7 +264,7 @@ export async function markExpenseSynced(queueId, serverName) {
 		})
 
 		// Update cache: remove offline entry, the server data will be re-cached on next load
-		const offlineName = `OFFLINE-EXP-${entry.offline_id.replace("pos_offline_", "").slice(0, 8)}`
+		const offlineName = generateOfflineExpenseName(entry.offline_id)
 		await db.expenses_cache.delete(offlineName)
 
 		log.info(`Marked expense synced: queue ${queueId} → ${serverName}`)
@@ -238,7 +282,7 @@ export async function deleteQueuedExpense(queueId) {
 	try {
 		const entry = await db.expense_queue.get(queueId)
 		if (entry) {
-			const offlineName = `OFFLINE-EXP-${entry.offline_id.replace("pos_offline_", "").slice(0, 8)}`
+			const offlineName = generateOfflineExpenseName(entry.offline_id)
 			await db.expenses_cache.delete(offlineName)
 		}
 		await db.expense_queue.delete(queueId)

@@ -151,9 +151,10 @@ const statusLabel = computed(() => {
 
 function formatAmount(amount) {
 	const num = parseFloat(amount) || 0
-	return num.toLocaleString(undefined, {
+	const formatted = num.toLocaleString(undefined, {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
 	})
+	return props.currency ? `${formatted} ${props.currency}` : formatted
 }
 </script>

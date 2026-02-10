@@ -296,9 +296,9 @@
 
 <script setup>
 import { Button } from "frappe-ui"
-import { computed, ref, watch } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { usePOSExpensesStore } from "@/stores/posExpenses"
-import { isOffline } from "@/utils/offline/offlineState"
+import { offlineState } from "@/utils/offline/offlineState"
 import { useToast } from "@/composables/useToast"
 import ExpenseCard from "./ExpenseCard.vue"
 import ExpenseReportCard from "./ExpenseReportCard.vue"
@@ -326,7 +326,22 @@ const editingExpense = ref(null)
 const creatingReport = ref(false)
 const syncing = ref(false)
 
-const offline = computed(() => isOffline())
+// Reactive offline state via subscription (isOffline() is not reactive in Vue computed)
+const offline = ref(offlineState.isOffline)
+let offlineUnsubscribe = null
+
+onMounted(() => {
+	offlineUnsubscribe = offlineState.subscribe((state) => {
+		offline.value = state.isOffline
+	})
+})
+
+onUnmounted(() => {
+	if (offlineUnsubscribe) {
+		offlineUnsubscribe()
+		offlineUnsubscribe = null
+	}
+})
 
 const isLoading = computed(() =>
 	expenseStore.loadingExpenses || expenseStore.loadingReports || expenseStore.loadingCategories
@@ -394,8 +409,8 @@ async function initializeData() {
 	await expenseStore.loadEmployee()
 	if (!expenseStore.hasEmployee) return
 
-	// Auto-sync pending expenses when online
-	if (!isOffline() && (await expenseStore.pendingCount) > 0) {
+	// Auto-sync pending expenses when online (syncPending returns early if nothing to sync)
+	if (!offline.value) {
 		try {
 			await expenseStore.syncPending()
 		} catch {
@@ -404,12 +419,14 @@ async function initializeData() {
 	}
 
 	// Load data in parallel
-	Promise.all([
+	await Promise.all([
 		expenseStore.loadExpenses(),
 		expenseStore.loadExpenseReports(),
 		expenseStore.loadCategories(),
 		expenseStore.loadPaidByOptions(),
-	])
+	]).catch((error) => {
+		console.error("[ExpenseManagement] Error loading data:", error)
+	})
 }
 
 function handleClose() {
@@ -448,6 +465,7 @@ async function handleExpenseSaved(data) {
 }
 
 async function handleDeleteExpense(expense) {
+	if (!confirm(__("Are you sure you want to delete this expense?"))) return
 	try {
 		await expenseStore.deleteExpense(expense.name, expense._queue_id)
 		showSuccess(__("Expense deleted"))
@@ -466,7 +484,7 @@ function handleToggleSelect(expense) {
 }
 
 async function handleCreateReport(expense) {
-	if (isOffline()) {
+	if (offline.value) {
 		showError(__("Creating reports requires an internet connection"))
 		return
 	}
@@ -482,7 +500,7 @@ async function handleCreateReport(expense) {
 }
 
 async function handleBulkReport() {
-	if (isOffline()) {
+	if (offline.value) {
 		showError(__("Creating reports requires an internet connection"))
 		return
 	}
