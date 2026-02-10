@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-		:class="{ 'ring-2 ring-emerald-500': selected }"
+		:class="{ 'ring-2 ring-green-500': selected }"
 	>
 		<!-- Card Header -->
 		<div class="p-4 border-b bg-gray-50">
@@ -13,7 +13,7 @@
 						type="checkbox"
 						:checked="selected"
 						@change="$emit('select', expense)"
-						class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+						class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
 					/>
 					<div>
 						<div class="flex items-center gap-2">
@@ -45,7 +45,7 @@
 		<div class="p-4">
 			<div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
 				<!-- Category Pill -->
-				<span v-if="expense.category" class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">
+				<span v-if="expense.category" class="px-2 py-0.5 bg-green-50 text-green-700 rounded-full text-xs font-medium">
 					{{ expense.category }}
 				</span>
 				<!-- Date -->
@@ -84,7 +84,7 @@
 				<button
 					v-if="!expense._offline"
 					@click="$emit('create-report', expense)"
-					class="px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors ms-auto"
+					class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors ms-auto"
 				>
 					{{ __('Create Report') }}
 				</button>

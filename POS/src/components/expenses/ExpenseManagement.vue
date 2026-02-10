@@ -10,10 +10,10 @@
 			<div class="fixed inset-0 flex items-center justify-center p-4">
 				<div class="w-full h-full max-w-[95vw] max-h-[95vh] bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-emerald-50 to-green-50">
+					<div class="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-green-50 to-green-50">
 						<div class="flex items-center gap-3">
-							<div class="p-2 bg-emerald-100 rounded-lg">
-								<svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<div class="p-2 bg-green-100 rounded-lg">
+								<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
 								</svg>
 							</div>
@@ -83,7 +83,7 @@
 									:class="[
 										'px-4 py-3 text-sm font-semibold transition-all border-b-2 relative',
 										activeTab === tab.id
-											? 'text-emerald-600 border-emerald-500'
+											? 'text-green-600 border-green-500'
 											: 'text-gray-600 border-transparent hover:text-gray-800 hover:border-gray-300'
 									]"
 								>
@@ -97,7 +97,7 @@
 											:class="[
 												'ms-1 px-2 py-0.5 text-xs font-bold rounded-full',
 												activeTab === tab.id
-													? 'bg-emerald-100 text-emerald-800'
+													? 'bg-green-100 text-green-800'
 													: 'bg-gray-200 text-gray-700'
 											]"
 										>
@@ -112,7 +112,7 @@
 						<div class="flex-1 overflow-y-auto bg-gray-50">
 							<!-- Loading -->
 							<div v-if="expenseStore.loadingEmployee" class="flex flex-col items-center justify-center py-16">
-								<div class="animate-spin rounded-full h-12 w-12 border-b-3 border-emerald-500 mb-4"></div>
+								<div class="animate-spin rounded-full h-12 w-12 border-b-3 border-green-500 mb-4"></div>
 								<p class="text-sm font-medium text-gray-600">{{ __('Loading...') }}</p>
 							</div>
 
@@ -127,7 +127,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'all'
-														? 'bg-emerald-500 text-white shadow-md'
+														? 'bg-green-500 text-white shadow-md'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
@@ -138,7 +138,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'draft'
-														? 'bg-emerald-500 text-white shadow-md'
+														? 'bg-green-500 text-white shadow-md'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
@@ -149,7 +149,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'submitted'
-														? 'bg-emerald-500 text-white shadow-md'
+														? 'bg-green-500 text-white shadow-md'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
@@ -162,13 +162,13 @@
 												v-if="selectedExpenses.length > 0 && !offline"
 												@click="handleBulkReport"
 												:disabled="creatingReport"
-												class="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors disabled:opacity-50"
+												class="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50"
 											>
 												{{ __('Create Report ({0})', [selectedExpenses.length]) }}
 											</button>
 											<button
 												@click="handleNewExpense"
-												class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+												class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-sm"
 											>
 												{{ __('+ New Expense') }}
 											</button>
@@ -177,7 +177,7 @@
 
 									<!-- Loading State -->
 									<div v-if="expenseStore.loadingExpenses" class="flex flex-col items-center justify-center py-12">
-										<div class="animate-spin rounded-full h-10 w-10 border-b-3 border-emerald-500 mb-3"></div>
+										<div class="animate-spin rounded-full h-10 w-10 border-b-3 border-green-500 mb-3"></div>
 										<p class="text-sm text-gray-600">{{ __('Loading expenses...') }}</p>
 									</div>
 
@@ -211,7 +211,7 @@
 								<div v-if="activeTab === 'reports'">
 									<!-- Loading -->
 									<div v-if="expenseStore.loadingReports" class="flex flex-col items-center justify-center py-12">
-										<div class="animate-spin rounded-full h-10 w-10 border-b-3 border-emerald-500 mb-3"></div>
+										<div class="animate-spin rounded-full h-10 w-10 border-b-3 border-green-500 mb-3"></div>
 										<p class="text-sm text-gray-600">{{ __('Loading reports...') }}</p>
 									</div>
 
@@ -245,7 +245,7 @@
 											v-if="!offline && expenseStore.pendingCount > 0"
 											@click="handleSyncNow"
 											:disabled="syncing"
-											class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50"
+											class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
 										>
 											{{ syncing ? __('Syncing...') : __('Sync Now') }}
 										</button>

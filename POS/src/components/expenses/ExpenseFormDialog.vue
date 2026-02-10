@@ -7,7 +7,7 @@
 		>
 			<div class="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden">
 				<!-- Header -->
-				<div class="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-emerald-50 to-green-50">
+				<div class="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-50">
 					<h3 class="text-lg font-bold text-gray-900">
 						{{ expense ? __('Edit Expense') : __('New Expense') }}
 					</h3>
@@ -29,7 +29,7 @@
 						<input
 							v-model="form.expense_description"
 							type="text"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
 							:placeholder="__('What is this expense for?')"
 						/>
 					</div>
@@ -39,7 +39,7 @@
 						<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Category') }} *</label>
 						<select
 							v-model="form.category"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
 						>
 							<option value="">{{ __('Select Category') }}</option>
 							<option v-for="cat in categories" :key="cat.name" :value="cat.name">
@@ -57,7 +57,7 @@
 								type="number"
 								step="0.01"
 								min="0"
-								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
 								placeholder="0.00"
 							/>
 						</div>
@@ -65,7 +65,7 @@
 							<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Paid By') }}</label>
 							<select
 								v-model="form.paid_by"
-								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm bg-white"
+								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
 							>
 								<option value="Employee">{{ __('Employee') }}</option>
 								<option value="Company">{{ __('Company') }}</option>
@@ -79,7 +79,7 @@
 						<input
 							v-model="form.expense_date"
 							type="date"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
 						/>
 					</div>
 
@@ -89,7 +89,7 @@
 						<textarea
 							v-model="form.notes"
 							rows="2"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm resize-none"
 							:placeholder="__('Additional notes...')"
 						></textarea>
 					</div>
@@ -106,7 +106,7 @@
 					<button
 						@click="handleSave"
 						:disabled="saving || !isValid"
-						class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						{{ saving ? __('Saving...') : __('Save') }}
 					</button>
