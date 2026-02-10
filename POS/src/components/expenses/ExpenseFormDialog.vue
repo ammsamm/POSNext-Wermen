@@ -67,8 +67,9 @@
 								v-model="form.paid_by"
 								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
 							>
-								<option value="Employee">{{ __('Employee') }}</option>
-								<option value="Company">{{ __('Company') }}</option>
+								<option v-for="opt in paidByOptions" :key="opt" :value="opt">
+									{{ opt }}
+								</option>
 							</select>
 						</div>
 					</div>
@@ -129,6 +130,10 @@ const props = defineProps({
 		type: Array,
 		default: () => [],
 	},
+	paidByOptions: {
+		type: Array,
+		default: () => [],
+	},
 	company: {
 		type: String,
 		default: "",
@@ -152,7 +157,7 @@ function getDefaultForm() {
 		expense_description: "",
 		category: "",
 		total: null,
-		paid_by: "Employee",
+		paid_by: "",
 		expense_date: today,
 		notes: "",
 	}
@@ -172,13 +177,14 @@ watch(
 	(val) => {
 		show.value = val
 		if (val) {
+			const defaultPaidBy = props.paidByOptions?.[0] || ""
 			// Populate form from existing expense or reset
 			if (props.expense) {
 				form.value = {
 					expense_description: props.expense.expense_description || "",
 					category: props.expense.category || "",
 					total: props.expense.total || null,
-					paid_by: props.expense.paid_by || "Employee",
+					paid_by: props.expense.paid_by || defaultPaidBy,
 					expense_date: props.expense.expense_date || new Date().toISOString().split("T")[0],
 					notes: props.expense.notes || "",
 				}

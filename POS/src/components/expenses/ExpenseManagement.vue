@@ -285,6 +285,7 @@
 				v-model="showExpenseForm"
 				:expense="editingExpense"
 				:categories="expenseStore.categories"
+				:paid-by-options="expenseStore.paidByOptions"
 				:company="expenseStore.company"
 				:currency="currency"
 				@saved="handleExpenseSaved"
@@ -407,6 +408,7 @@ async function initializeData() {
 		expenseStore.loadExpenses(),
 		expenseStore.loadExpenseReports(),
 		expenseStore.loadCategories(),
+		expenseStore.loadPaidByOptions(),
 	])
 }
 

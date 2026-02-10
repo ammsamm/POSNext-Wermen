@@ -25,6 +25,7 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 	const expenses = ref([])
 	const expenseReports = ref([])
 	const categories = ref([])
+	const paidByOptions = ref([])
 	const pendingCount = ref(0)
 	const loadingEmployee = ref(false)
 	const loadingExpenses = ref(false)
@@ -162,6 +163,17 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		}
 	}
 
+	async function loadPaidByOptions() {
+		try {
+			if (!isOffline()) {
+				const result = await call("pos_next.api.expenses.get_paid_by_options")
+				paidByOptions.value = result || []
+			}
+		} catch (error) {
+			log.error("Failed to load paid_by options:", error)
+		}
+	}
+
 	async function saveExpense(data) {
 		if (!isOffline()) {
 			// Online: save via Frappe API
@@ -261,6 +273,7 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		expenses,
 		expenseReports,
 		categories,
+		paidByOptions,
 		pendingCount,
 		loadingEmployee,
 		loadingExpenses,
@@ -280,6 +293,7 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		loadExpenses,
 		loadExpenseReports,
 		loadCategories,
+		loadPaidByOptions,
 		saveExpense,
 		deleteExpense,
 		createSingleReport,

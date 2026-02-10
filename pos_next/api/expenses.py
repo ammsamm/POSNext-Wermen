@@ -83,6 +83,16 @@ def get_categories():
 
 
 @frappe.whitelist()
+def get_paid_by_options():
+    """Get paid_by select options from Expense DocType definition."""
+    meta = frappe.get_meta("Expense")
+    field = meta.get_field("paid_by")
+    if field and field.options:
+        return [opt for opt in field.options.split("\n") if opt.strip()]
+    return []
+
+
+@frappe.whitelist()
 def create_report(expense, details=None):
     """Create expense report from a single expense - proxy to erpnext_expenses."""
     from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
