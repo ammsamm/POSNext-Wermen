@@ -127,7 +127,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'all'
-														? 'bg-green-500 text-white shadow-md'
+														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
@@ -138,7 +138,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'draft'
-														? 'bg-green-500 text-white shadow-md'
+														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
@@ -149,7 +149,7 @@
 												:class="[
 													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
 													expenseFilter === 'submitted'
-														? 'bg-green-500 text-white shadow-md'
+														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
 												]"
 											>
