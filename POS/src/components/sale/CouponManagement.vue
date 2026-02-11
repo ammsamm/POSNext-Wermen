@@ -367,6 +367,7 @@
 									<FormControl
 										v-if="form.discount_type === 'Percentage'"
 										type="number"
+										inputmode="decimal"
 										:label="__('Discount Percentage (%)')"
 										v-model="form.discount_percentage"
 										:placeholder="__('e.g., 20')"
@@ -378,6 +379,7 @@
 									<FormControl
 										v-if="form.discount_type === 'Amount'"
 										type="number"
+										inputmode="decimal"
 										:label="__('Discount Amount')"
 										v-model="form.discount_amount"
 										:placeholder="__('Amount in {0}', [currency])"
@@ -387,6 +389,7 @@
 
 									<FormControl
 										type="number"
+										inputmode="decimal"
 										:label="__('Minimum Cart Amount')"
 										v-model="form.min_amount"
 										:placeholder="__('Optional minimum in {0}', [currency])"
@@ -395,6 +398,7 @@
 
 									<FormControl
 										type="number"
+										inputmode="decimal"
 										:label="__('Maximum Discount Amount')"
 										v-model="form.max_amount"
 										:placeholder="__('Optional cap in {0}', [currency])"
@@ -442,6 +446,7 @@
 									<FormControl
 										v-if="form.coupon_type === 'Promotional'"
 										type="number"
+										inputmode="numeric"
 										:label="__('Maximum Use')"
 										v-model="form.maximum_use"
 										:placeholder="__('Unlimited')"

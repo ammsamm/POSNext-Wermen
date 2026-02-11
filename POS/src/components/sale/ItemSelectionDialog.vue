@@ -111,8 +111,8 @@
 							<button
 								type="button"
 								@click="decrementQuantity"
-								class="w-[40px] h-[40px] min-w-[40px] bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-lg transition-colors flex items-center justify-center border-e border-gray-300 touch-manipulation"
-								style="flex: 0 0 40px;"
+								class="w-[44px] h-[44px] min-w-[44px] bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-lg transition-colors flex items-center justify-center border-e border-gray-300 touch-manipulation"
+								style="flex: 0 0 44px;"
 							>
 								−
 							</button>
@@ -131,8 +131,8 @@
 							<button
 								type="button"
 								@click="incrementQuantity"
-								class="w-[40px] h-[40px] min-w-[40px] bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-lg transition-colors flex items-center justify-center border-s border-gray-300 touch-manipulation"
-								style="flex: 0 0 40px;"
+								class="w-[44px] h-[44px] min-w-[44px] bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-lg transition-colors flex items-center justify-center border-s border-gray-300 touch-manipulation"
+								style="flex: 0 0 44px;"
 							>
 								+
 							</button>

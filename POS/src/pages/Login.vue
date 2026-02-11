@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div class="text-center">
         <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
@@ -58,7 +58,7 @@
                 <button
                   type="button"
                   @click="showPassword = !showPassword"
-                  class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-600 hover:text-gray-800 transition-colors focus:outline-none"
+                  class="absolute inset-y-0 end-0 flex items-center pe-3 min-w-[44px] justify-center text-gray-600 hover:text-gray-800 transition-colors focus:outline-none touch-manipulation"
                   :disabled="session.login.loading"
                   tabindex="-1"
                   :aria-label="showPassword ? __('Hide password') : __('Show password')"

@@ -449,7 +449,7 @@
 								:key="page"
 								@click="goToPage(page)"
 								:class="[
-									'min-w-[28px] sm:min-w-[32px] px-1.5 sm:px-2.5 py-1.5 text-[10px] sm:text-xs font-medium rounded-lg border transition-[background-color,border-color] duration-75 touch-manipulation',
+									'min-w-[36px] sm:min-w-[36px] min-h-[36px] px-1.5 sm:px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-[background-color,border-color] duration-75 touch-manipulation',
 									currentPage === page
 										? 'bg-blue-600 text-white border-blue-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 active:bg-gray-100'
@@ -654,7 +654,7 @@
 								:key="page"
 								@click="goToPage(page)"
 								:class="[
-									'min-w-[28px] sm:min-w-[32px] px-1.5 sm:px-2.5 py-1.5 text-[10px] sm:text-xs font-medium rounded-lg border transition-[background-color,border-color] duration-75 touch-manipulation',
+									'min-w-[36px] sm:min-w-[36px] min-h-[36px] px-1.5 sm:px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-[background-color,border-color] duration-75 touch-manipulation',
 									currentPage === page
 										? 'bg-blue-600 text-white border-blue-600'
 										: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 active:bg-gray-100'

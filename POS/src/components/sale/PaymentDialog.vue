@@ -54,7 +54,7 @@
 								</div>
 								<button
 									@click="clearSalesPersons"
-									class="text-purple-500 hover:text-purple-700 p-1 rounded hover:bg-purple-100"
+									class="text-purple-500 hover:text-purple-700 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded hover:bg-purple-100 touch-manipulation"
 									:title="__('Change sales person')"
 								>
 									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -328,6 +328,7 @@
 										<!-- Input -->
 										<input
 											type="number"
+											inputmode="decimal"
 											v-model.number="localAdditionalDiscount"
 											@input="handleAdditionalDiscountChange"
 											:placeholder="additionalDiscountType === 'percentage' ? '0' : '0.00'"

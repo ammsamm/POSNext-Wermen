@@ -537,6 +537,7 @@
 														<FormControl
 															v-if="form.discount_type !== 'free_item'"
 															type="number"
+															inputmode="decimal"
 															:label="form.discount_type === 'percentage' ? __('Discount (%)') : __('discount ({0})', [currency])"
 															v-model="form.discount_value"
 															placeholder="0"
@@ -594,6 +595,7 @@
 														<FormControl
 															v-if="form.discount_type === 'free_item'"
 															type="number"
+															inputmode="numeric"
 															:label="__('Free Quantity')"
 															v-model="form.free_qty"
 															placeholder="1"
@@ -603,6 +605,7 @@
 
 														<FormControl
 															type="number"
+															inputmode="numeric"
 															:label="__('Minimum Quantity')"
 															v-model="form.min_qty"
 															placeholder="0"
@@ -611,6 +614,7 @@
 
 														<FormControl
 															type="number"
+															inputmode="numeric"
 															:label="__('Maximum Quantity')"
 															v-model="form.max_qty"
 															placeholder="0"
@@ -619,6 +623,7 @@
 
 														<FormControl
 															type="number"
+															inputmode="decimal"
 															:label="__('Minimum Amount ({0})', [currency])"
 															v-model="form.min_amt"
 															placeholder="0"
@@ -627,6 +632,7 @@
 
 														<FormControl
 															type="number"
+															inputmode="decimal"
 															:label="__('Maximum Amount ({0})', [currency])"
 															v-model="form.max_amt"
 															placeholder="0"

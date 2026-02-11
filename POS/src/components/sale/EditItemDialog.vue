@@ -27,7 +27,7 @@
 											<button
 												type="button"
 												@click="cancel"
-												class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+												class="rounded-md p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors touch-manipulation"
 											>
 												<FeatherIcon name="x" class="h-4 w-4" />
 											</button>
@@ -72,7 +72,7 @@
 											</div>
 
 											<!-- Two Column Layout for Quantity, UOM, Rate, Warehouse -->
-											<div class="grid grid-cols-2 gap-4">
+											<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 												<!-- Left Column: Quantity and Rate -->
 												<div class="flex flex-col gap-4">
 													<!-- Quantity Control -->
@@ -82,7 +82,7 @@
                               <span v-if="localItem?.is_resolved_barcode" class="ms-1 text-xs text-amber-600">({{ __('Locked') }})</span>
                             </label>
 														<!-- For serial items, quantity is read-only (controlled by serial list) -->
-														<div v-if="localItem?.has_serial_no && localSerials.length > 0" class="w-full h-7 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
+														<div v-if="localItem?.has_serial_no && localSerials.length > 0" class="w-full h-10 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
 															<span class="text-sm font-semibold text-gray-600">{{ localSerials.length }}</span>
 														</div>
                             <!-- For resolved barcode items, quantity is read-only -->
@@ -90,11 +90,11 @@
                               <span class="text-sm font-semibold text-amber-700">{{ localQuantity }}</span>
                             </div>
 														<!-- For non-serial items, show quantity controls -->
-														<div v-else class="w-full h-7 border border-gray-300 rounded-lg bg-white flex items-center overflow-hidden">
+														<div v-else class="w-full h-10 border border-gray-300 rounded-lg bg-white flex items-center overflow-hidden">
 															<button
 																type="button"
 																@click="decrementQuantity"
-																class="w-7 h-7 min-w-7 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-base transition-colors flex items-center justify-center border-e border-gray-300"
+																class="w-10 h-10 min-w-10 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-base transition-colors flex items-center justify-center border-e border-gray-300 touch-manipulation"
 															>
 																−
 															</button>
@@ -114,7 +114,7 @@
 															<button
 																type="button"
 																@click="incrementQuantity"
-																class="w-7 h-7 min-w-7 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-base transition-colors flex items-center justify-center border-s border-gray-300"
+																class="w-10 h-10 min-w-10 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 font-bold text-base transition-colors flex items-center justify-center border-s border-gray-300 touch-manipulation"
 															>
 																+
 															</button>
@@ -124,7 +124,7 @@
 													<!-- Rate -->
 													<div>
 														<label class="block text-sm font-medium text-gray-700 mb-2 text-start">{{ __('Rate') }}</label>
-														<div class="relative h-7">
+														<div class="relative h-10">
 															<span class="absolute inset-y-0 start-0 ps-3 flex items-center text-gray-500 text-sm font-medium">
 																{{ currencySymbol }}
 															</span>
@@ -134,7 +134,7 @@
 																min="0"
 																step="0.01"
 																readonly
-																class="w-full h-7 border border-gray-300 rounded-lg ps-12 pe-3 text-sm font-semibold bg-gray-50 cursor-not-allowed"
+																class="w-full h-10 border border-gray-300 rounded-lg ps-12 pe-3 text-sm font-semibold bg-gray-50 cursor-not-allowed"
 															/>
 														</div>
 													</div>
@@ -189,7 +189,7 @@
 															type="button"
 															@click="removeSerial(serial)"
 															:disabled="localSerials.length <= 1"
-															class="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+															class="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
 															:title="localSerials.length <= 1 ? __('Cannot remove last serial') : __('Remove serial')"
 														>
 															<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,7 +219,8 @@
 																min="0"
 																:max="discountType === 'percentage' ? 100 : undefined"
 																step="0.01"
-																class="w-full h-7 border border-gray-300 rounded-lg px-3 pe-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+																inputmode="decimal"
+																class="w-full h-10 border border-gray-300 rounded-lg px-3 pe-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 																@input="calculateDiscount"
 															/>
 															<span class="absolute inset-y-0 end-0 pe-3 flex items-center text-gray-500 text-sm">

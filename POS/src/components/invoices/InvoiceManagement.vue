@@ -7,19 +7,19 @@
 			@click.self="handleClose"
 		>
 			<!-- Main Container -->
-			<div class="fixed inset-0 flex items-center justify-center p-4">
-				<div class="w-full h-full max-w-[95vw] max-h-[95vh] bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col">
+			<div class="fixed inset-0 flex items-center justify-center sm:p-4">
+				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-indigo-50 to-purple-50">
-						<div class="flex items-center gap-3">
-							<div class="p-2 bg-indigo-100 rounded-lg">
-								<svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-indigo-50 to-purple-50 flex-shrink-0">
+						<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+							<div class="p-1.5 sm:p-2 bg-indigo-100 rounded-lg flex-shrink-0">
+								<svg class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
 								</svg>
 							</div>
-							<div>
-								<h2 class="text-xl font-bold text-gray-900">{{ __('Invoice Management') }}</h2>
-								<p class="text-sm text-gray-600 flex items-center mt-0.5">
+							<div class="min-w-0">
+								<h2 class="text-base sm:text-xl font-bold text-gray-900 truncate">{{ __('Invoice Management') }}</h2>
+								<p class="text-xs sm:text-sm text-gray-600 flex items-center mt-0.5 truncate">
 									{{ __('Manage all your invoices in one place') }}
 								</p>
 							</div>
@@ -36,11 +36,11 @@
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
 									</svg>
 								</template>
-								{{ __('Refresh') }}
+								<span class="hidden sm:inline">{{ __("Refresh") }}</span>
 							</Button>
 							<button
 								@click="handleClose"
-								class="p-2 hover:bg-white/50 rounded-lg transition-colors"
+								class="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/50 rounded-lg transition-colors"
 							>
 								<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -51,13 +51,13 @@
 
 					<!-- Tabs Navigation -->
 					<div class="border-b border-gray-200 bg-gray-50">
-						<nav class="flex gap-2 px-6" :aria-label="__('Tabs')">
+						<nav class="flex gap-1 sm:gap-2 px-3 sm:px-6 overflow-x-auto" :aria-label="__('Tabs')">
 							<button
 								v-for="tab in tabs"
 								:key="tab.id"
 								@click="activeTab = tab.id"
 								:class="[
-									'px-4 py-3 text-sm font-semibold transition-all border-b-2 relative',
+									'px-3 sm:px-4 py-3 text-sm font-semibold transition-all border-b-2 relative whitespace-nowrap min-h-[44px]',
 									activeTab === tab.id
 										? getTabActiveClass(tab.id)
 										: 'text-gray-600 border-transparent hover:text-gray-800 hover:border-gray-300'
@@ -91,7 +91,7 @@
 						</div>
 
 						<!-- Tab Content -->
-						<div class="p-6">
+						<div class="p-3 sm:p-6">
 							<!-- Unpaid Tab -->
 							<div v-if="activeTab === 'partial'" class="flex flex-col gap-4">
 								<!-- Filter Buttons -->

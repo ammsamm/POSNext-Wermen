@@ -8,9 +8,9 @@
 		>
 			<!-- Main Container -->
 			<div class="fixed inset-0 flex items-center justify-center p-4 md:p-6">
-				<div class="w-full max-w-5xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+				<div class="w-full max-w-5xl max-h-[100dvh] sm:max-h-[90vh] bg-white sm:rounded-xl shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
 						<div class="flex items-center gap-3">
 							<div class="p-2 bg-blue-100 rounded-lg">
 								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +57,7 @@
 							</Button>
 							<button
 								@click="handleClose"
-								class="p-2 hover:bg-white/50 rounded-lg transition-colors"
+								class="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/50 rounded-lg transition-colors touch-manipulation"
 							>
 								<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -75,18 +75,18 @@
 						</div>
 
 						<!-- Settings Form -->
-						<div v-else-if="settings.pos_profile || posProfile" class="p-6 flex flex-col gap-6">
+						<div v-else-if="settings.pos_profile || posProfile" class="p-3 sm:p-6 flex flex-col gap-4 sm:gap-6">
 							<!-- Tabs Navigation -->
-							<div class="flex p-1 bg-gray-200 rounded-lg self-start">
+							<div class="flex p-1 bg-gray-200 rounded-lg self-start overflow-x-auto">
 								<button
 									@click="activeTab = 'stock'"
-									:class="['px-4 py-2 text-sm font-medium rounded-md transition-all duration-200', activeTab === 'stock' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50']"
+									:class="['px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap min-h-[44px] flex items-center', activeTab === 'stock' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50']"
 								>
 									{{ __('Stock Management') }}
 								</button>
 								<button
 									@click="activeTab = 'sales'"
-									:class="['px-4 py-2 text-sm font-medium rounded-md transition-all duration-200', activeTab === 'sales' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50']"
+									:class="['px-3 sm:px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap min-h-[44px] flex items-center', activeTab === 'sales' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50']"
 								>
 									{{ __('Sales Management') }}
 								</button>
@@ -115,7 +115,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="p-6 flex flex-col gap-6">
+								<div class="p-3 sm:p-6 flex flex-col gap-4 sm:gap-6">
 									<!-- Warehouse Selection -->
 									<div :class="warehouseSubsectionClasses.container">
 										<div class="flex items-center gap-2 mb-4">
@@ -279,7 +279,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="p-6 flex flex-col gap-6">
+								<div class="p-3 sm:p-6 flex flex-col gap-4 sm:gap-6">
 									<!-- Pricing & Discounts -->
 									<div :class="pricingSubsectionClasses.container">
 										<div class="flex items-center gap-2 mb-4">
