@@ -67,7 +67,7 @@
 			</p>
 
 			<!-- Actions -->
-			<div v-if="expense.docstatus === 0" class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+			<div v-if="expense.docstatus === 0 && isDraft" class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
 				<button
 					v-if="!expense._offline"
 					@click="$emit('edit', expense)"
@@ -116,6 +116,11 @@ const props = defineProps({
 })
 
 defineEmits(["edit", "delete", "select", "create-report"])
+
+const isDraft = computed(() => {
+	const ws = (props.expense.workflow_state || "").toLowerCase()
+	return !ws || ws === "draft"
+})
 
 const statusBadgeClass = computed(() => {
 	if (props.expense._offline) {
