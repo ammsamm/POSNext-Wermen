@@ -24,10 +24,12 @@
 				:cache-stats="itemStore.cacheStats"
 				:stock-sync-active="isStockSyncActive"
 				:is-refreshing="stockStore.refreshing"
+				:enable-expenses="settingsStore.enableExpenses"
 				@sync-click="handleSyncClick"
 				@printer-click="uiStore.showHistoryDialog = true"
 				@refresh-click="handleRefresh"
 				@clear-cache="handleClearCache"
+				@management-menu-click="handleManagementMenuClick"
 				@logout="uiStore.showLogoutDialog = true"
 			>
 				<template #menu-items>

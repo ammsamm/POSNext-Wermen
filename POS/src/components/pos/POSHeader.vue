@@ -3,10 +3,11 @@
 		class="bg-white shadow-sm sticky top-0 z-[200]"
 	>
 		<div class="flex py-2 sm:py-3">
-			<!-- POS Icon - Aligned with Management Sidebar (64px) -->
-			<div class="w-16 flex-shrink-0 flex items-center justify-center">
+			<!-- POS Icon (Desktop) / Hamburger Menu (Mobile) - Aligned with Management Sidebar (64px) -->
+			<div ref="hamburgerRef" class="w-16 flex-shrink-0 flex items-center justify-center relative">
+				<!-- Desktop: POS Icon -->
 				<button
-					class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md flex-shrink-0 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all"
+					class="hidden lg:flex w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg items-center justify-center shadow-md flex-shrink-0 hover:from-blue-600 hover:to-blue-700 active:scale-95 transition-all"
 					:aria-label="'POS Next'"
 					:title="__('POS Next')"
 				>
@@ -14,6 +15,79 @@
 						<path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z"/>
 					</svg>
 				</button>
+
+				<!-- Mobile: Hamburger Menu -->
+				<button
+					class="lg:hidden w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation"
+					@click="showMobileMenu = !showMobileMenu"
+					:aria-label="__('Menu')"
+					:title="__('Menu')"
+				>
+					<svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path v-if="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+						<path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+					</svg>
+				</button>
+
+				<!-- Mobile Menu Dropdown -->
+				<Transition name="menu-slide">
+					<div
+						v-if="showMobileMenu"
+						class="absolute top-full start-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250]"
+					>
+						<button
+							@click="handleMobileMenuClick('dashboard')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-blue-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="layout" class="w-5 h-5 text-blue-600" />
+							<span>{{ __('Dashboard') }}</span>
+						</button>
+						<button
+							@click="handleMobileMenuClick('promotions')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-green-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="tag" class="w-5 h-5 text-green-600" />
+							<span>{{ __('Promotions') }}</span>
+						</button>
+						<button
+							@click="handleMobileMenuClick('products')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-purple-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="package" class="w-5 h-5 text-purple-600" />
+							<span>{{ __('Products') }}</span>
+						</button>
+						<button
+							@click="handleMobileMenuClick('reports')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-orange-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="bar-chart-2" class="w-5 h-5 text-orange-600" />
+							<span>{{ __('Reports') }}</span>
+						</button>
+						<button
+							@click="handleMobileMenuClick('invoices')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-indigo-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="file-text" class="w-5 h-5 text-indigo-600" />
+							<span>{{ __('Invoice Management') }}</span>
+						</button>
+						<button
+							v-if="enableExpenses"
+							@click="handleMobileMenuClick('expenses')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-emerald-50 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="credit-card" class="w-5 h-5 text-emerald-600" />
+							<span>{{ __('Expenses') }}</span>
+						</button>
+						<div class="mx-3 my-1 border-t border-gray-200"></div>
+						<button
+							@click="handleMobileMenuClick('settings')"
+							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition-colors"
+						>
+							<FeatherIcon name="settings" class="w-5 h-5 text-gray-600" />
+							<span>{{ __('Settings') }}</span>
+						</button>
+					</div>
+				</Transition>
 			</div>
 
 			<!-- Main Header Content -->
@@ -256,10 +330,13 @@ import StatusBadge from "@/components/common/StatusBadge.vue"
 import UserMenu from "@/components/common/UserMenu.vue"
 import LanguageSwitcher from "@/components/common/LanguageSwitcher.vue"
 import { DEFAULT_LOCALE } from "@/utils/currency"
-import { ref } from "vue"
+import { FeatherIcon } from "frappe-ui"
+import { onMounted, onUnmounted, ref } from "vue"
 import { version } from "../../../package.json"
 
 const showCacheTooltip = ref(false)
+const showMobileMenu = ref(false)
+const hamburgerRef = ref(null)
 const appVersion = version
 
 const emit = defineEmits([
@@ -267,11 +344,31 @@ const emit = defineEmits([
 	"printer-click",
 	"refresh-click",
 	"menu-click",
+	"management-menu-click",
 	"logout",
 	"menu-opened",
 	"menu-closed",
 	"clear-cache",
 ])
+
+function handleMobileMenuClick(menuItem) {
+	showMobileMenu.value = false
+	emit("management-menu-click", menuItem)
+}
+
+function handleClickOutsideMenu(event) {
+	if (showMobileMenu.value && hamburgerRef.value && !hamburgerRef.value.contains(event.target)) {
+		showMobileMenu.value = false
+	}
+}
+
+onMounted(() => {
+	document.addEventListener("click", handleClickOutsideMenu)
+})
+
+onUnmounted(() => {
+	document.removeEventListener("click", handleClickOutsideMenu)
+})
 
 function handleClearCacheClick() {
 	showCacheTooltip.value = false
@@ -344,6 +441,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	enableExpenses: {
+		type: Boolean,
+		default: false,
+	},
 })
 
 // Cache status helpers
@@ -408,3 +509,15 @@ const printerIcon =
 const refreshIcon =
 	"M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
 </script>
+
+<style scoped>
+.menu-slide-enter-active,
+.menu-slide-leave-active {
+	transition: opacity 150ms ease, transform 150ms ease;
+}
+.menu-slide-enter-from,
+.menu-slide-leave-to {
+	opacity: 0;
+	transform: translateY(-8px);
+}
+</style>
