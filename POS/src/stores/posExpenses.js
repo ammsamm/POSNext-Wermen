@@ -188,12 +188,16 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 	async function saveExpense(data) {
 		if (!isOffline()) {
 			// Online: save via Frappe API
+			const isEdit = Boolean(data.name)
 			const doc = {
 				doctype: "Expense",
-				employee: employee.value.name,
-				employee_name: employee.value.employee_name,
-				company: employee.value.company,
 				...data,
+			}
+			// Only set employee/company on new expenses (set_only_once fields)
+			if (!isEdit) {
+				doc.employee = employee.value.name
+				doc.employee_name = employee.value.employee_name
+				doc.company = employee.value.company
 			}
 			const result = await call("frappe.client.save", { doc })
 			await loadExpenses()
