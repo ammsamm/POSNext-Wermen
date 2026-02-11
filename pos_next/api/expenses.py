@@ -161,8 +161,6 @@ def save_expense(data):
         for field in editable_fields:
             if field in data:
                 doc.set(field, data[field])
-
-        doc.save()
     else:
         # Create new
         doc = frappe.new_doc("Expense")
@@ -174,9 +172,57 @@ def save_expense(data):
             if field in data:
                 doc.set(field, data[field])
 
+    # Handle attachments child table
+    if "attachments" in data:
+        doc.set("attachments", [])
+        for att in data["attachments"]:
+            doc.append("attachments", {
+                "attachment": att.get("attachment"),
+                "description": att.get("description", ""),
+            })
+
+    if expense_name:
+        doc.save()
+    else:
         doc.insert()
 
     return doc.as_dict()
+
+
+@frappe.whitelist()
+def get_expense_detail(name):
+    """Get a single expense with its attachments for editing."""
+    current = _get_current_employee()
+    if not current:
+        frappe.throw(_("No active Employee record found."))
+
+    doc = frappe.get_doc("Expense", name)
+
+    if doc.employee != current.name:
+        frappe.throw(
+            _("You can only view your own expenses."),
+            frappe.PermissionError,
+        )
+
+    return {
+        "name": doc.name,
+        "expense_description": doc.expense_description,
+        "category": doc.category,
+        "total": doc.total,
+        "paid_by": doc.paid_by,
+        "expense_date": str(doc.expense_date) if doc.expense_date else "",
+        "notes": doc.notes,
+        "docstatus": doc.docstatus,
+        "attachments": [
+            {
+                "name": att.name,
+                "attachment": att.attachment,
+                "file_name": att.file_name,
+                "description": att.description,
+            }
+            for att in (doc.attachments or [])
+        ],
+    }
 
 
 @frappe.whitelist()
