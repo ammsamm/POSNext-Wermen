@@ -66,8 +66,6 @@ def get_expenses(employee, limit=100):
             "company",
             "notes",
             "docstatus",
-            "modified",
-            "workflow_state",
         ],
         order_by="expense_date desc",
         limit_page_length=int(limit),
@@ -114,6 +112,93 @@ def get_paid_by_options():
     if field and field.options:
         return [opt for opt in field.options.split("\n") if opt.strip()]
     return []
+
+
+@frappe.whitelist()
+def save_expense(data):
+    """Create or update an Expense document.
+
+    For new expenses: creates and inserts.
+    For existing expenses: loads from DB, updates editable fields, saves.
+    """
+    import json as _json
+
+    if isinstance(data, str):
+        data = _json.loads(data)
+
+    current = _get_current_employee()
+    if not current:
+        frappe.throw(
+            _("No active Employee record found for user {0}").format(
+                frappe.session.user
+            )
+        )
+
+    editable_fields = [
+        "expense_description",
+        "category",
+        "total",
+        "paid_by",
+        "expense_date",
+        "notes",
+    ]
+
+    expense_name = data.get("name")
+
+    if expense_name:
+        # Edit existing — load from DB to preserve system fields
+        doc = frappe.get_doc("Expense", expense_name)
+
+        if doc.docstatus != 0:
+            frappe.throw(_("Only draft expenses can be edited."))
+
+        if doc.employee != current.name:
+            frappe.throw(
+                _("You can only edit your own expenses."),
+                frappe.PermissionError,
+            )
+
+        for field in editable_fields:
+            if field in data:
+                doc.set(field, data[field])
+
+        doc.save()
+    else:
+        # Create new
+        doc = frappe.new_doc("Expense")
+        doc.employee = current.name
+        doc.employee_name = current.employee_name
+        doc.company = current.company
+
+        for field in editable_fields:
+            if field in data:
+                doc.set(field, data[field])
+
+        doc.insert()
+
+    return doc.as_dict()
+
+
+@frappe.whitelist()
+def delete_expense(name):
+    """Delete a draft Expense document."""
+    current = _get_current_employee()
+    if not current:
+        frappe.throw(_("No active Employee record found."))
+
+    doc = frappe.get_doc("Expense", name)
+
+    if doc.employee != current.name:
+        frappe.throw(
+            _("You can only delete your own expenses."),
+            frappe.PermissionError,
+        )
+
+    if doc.docstatus != 0:
+        frappe.throw(_("Only draft expenses can be deleted."))
+
+    frappe.delete_doc("Expense", name)
+    return {"ok": True}
 
 
 @frappe.whitelist()

@@ -187,19 +187,10 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 
 	async function saveExpense(data) {
 		if (!isOffline()) {
-			// Online: save via Frappe API
-			const isEdit = Boolean(data.name)
-			const doc = {
-				doctype: "Expense",
-				...data,
-			}
-			// Only set employee/company on new expenses (set_only_once fields)
-			if (!isEdit) {
-				doc.employee = employee.value.name
-				doc.employee_name = employee.value.employee_name
-				doc.company = employee.value.company
-			}
-			const result = await call("frappe.client.save", { doc })
+			// Online: save via dedicated API (handles create vs edit properly)
+			const result = await call("pos_next.api.expenses.save_expense", {
+				data: JSON.stringify(data),
+			})
 			await loadExpenses()
 			return { online: true, name: result.name }
 		} else {
@@ -227,10 +218,7 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		}
 
 		if (!isOffline()) {
-			await call("frappe.client.delete", {
-				doctype: "Expense",
-				name,
-			})
+			await call("pos_next.api.expenses.delete_expense", { name })
 			await loadExpenses()
 		}
 	}

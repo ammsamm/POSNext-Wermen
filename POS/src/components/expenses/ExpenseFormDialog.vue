@@ -210,18 +210,9 @@ async function handleSave() {
 
 	try {
 		const data = { ...form.value }
-		// If editing an existing expense, include name, modified, and workflow fields
+		// If editing an existing expense, include its name
 		if (props.expense?.name && !props.expense._offline) {
 			data.name = props.expense.name
-			if (props.expense.modified) {
-				data.modified = props.expense.modified
-			}
-			if (props.expense.docstatus != null) {
-				data.docstatus = props.expense.docstatus
-			}
-			if (props.expense.workflow_state) {
-				data.workflow_state = props.expense.workflow_state
-			}
 		}
 		emit("saved", data)
 		show.value = false
