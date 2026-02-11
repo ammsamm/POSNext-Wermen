@@ -222,6 +222,8 @@ def create_report(expense, details=None):
 @frappe.whitelist()
 def create_bulk_report(selected):
     """Create bulk expense report from multiple expenses - proxy to erpnext_expenses."""
+    import json as _json
+
     try:
         from erpnext_expenses.erpnext_expenses.doctype.expense.expense import (
             create_bulk_expense_report,
@@ -233,6 +235,21 @@ def create_bulk_report(selected):
                 "Please install it."
             )
         )
+
+    # Frontend sends an array of expense names — convert to the object format
+    # that create_bulk_expense_report expects
+    if isinstance(selected, str):
+        names = _json.loads(selected)
+    else:
+        names = selected
+
+    if isinstance(names, list) and names and isinstance(names[0], str):
+        expenses = frappe.get_all(
+            "Expense",
+            filters={"name": ["in", names], "docstatus": 0},
+            fields=["name", "expense_date", "category", "expense_description", "total"],
+        )
+        selected = _json.dumps(expenses)
 
     return create_bulk_expense_report(selected)
 
