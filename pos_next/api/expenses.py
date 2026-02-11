@@ -181,7 +181,8 @@ def apply_workflow_action(report_name, action):
             frappe.PermissionError,
         )
 
-    frappe.model.workflow.apply_workflow(doc, action)
+    from frappe.model.workflow import apply_workflow
+    apply_workflow(doc, action)
     doc.reload()
 
     return {
