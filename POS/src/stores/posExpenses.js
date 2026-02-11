@@ -255,6 +255,31 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		return result
 	}
 
+	async function applyReportAction(reportName, action) {
+		if (isOffline()) {
+			throw new Error(__("Workflow actions require an internet connection"))
+		}
+		const result = await call("pos_next.api.expenses.apply_workflow_action", {
+			report_name: reportName,
+			action,
+		})
+		await loadExpenseReports()
+		await loadExpenses()
+		return result
+	}
+
+	async function getReportActions(reportName) {
+		if (isOffline()) return []
+		try {
+			return await call("pos_next.api.expenses.get_report_actions", {
+				report_name: reportName,
+			})
+		} catch (error) {
+			log.error("Failed to get report actions:", error)
+			return []
+		}
+	}
+
 	async function syncPending() {
 		if (isOffline()) return { success: 0, failed: 0, errors: [] }
 
@@ -309,6 +334,8 @@ export const usePOSExpensesStore = defineStore("posExpenses", () => {
 		deleteExpense,
 		createSingleReport,
 		createBulkReport,
+		applyReportAction,
+		getReportActions,
 		syncPending,
 		reset,
 	}

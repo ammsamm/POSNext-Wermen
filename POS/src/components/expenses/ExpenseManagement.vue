@@ -231,6 +231,8 @@
 											:key="report.name"
 											:report="report"
 											:currency="currency"
+											:actions="reportActions[report.name] || []"
+											@workflow-action="handleWorkflowAction"
 										/>
 									</div>
 								</div>
@@ -325,6 +327,7 @@ const showExpenseForm = ref(false)
 const editingExpense = ref(null)
 const creatingReport = ref(false)
 const syncing = ref(false)
+const reportActions = ref({})
 
 // Reactive offline state via subscription (isOffline() is not reactive in Vue computed)
 const offline = ref(offlineState.isOffline)
@@ -427,6 +430,9 @@ async function initializeData() {
 	]).catch((error) => {
 		console.error("[ExpenseManagement] Error loading data:", error)
 	})
+
+	// Load workflow actions for reports (after reports are loaded)
+	await loadReportActions()
 }
 
 function handleClose() {
@@ -439,6 +445,7 @@ async function handleRefresh() {
 		expenseStore.loadExpenseReports(),
 		expenseStore.loadCategories(),
 	])
+	await loadReportActions()
 }
 
 function handleNewExpense() {
@@ -530,6 +537,35 @@ async function handleSyncNow() {
 		showError(error.message || __("Sync failed"))
 	} finally {
 		syncing.value = false
+	}
+}
+
+async function loadReportActions() {
+	if (offline.value) return
+	reportActions.value = {}
+	for (const report of expenseStore.expenseReports) {
+		try {
+			const actions = await expenseStore.getReportActions(report.name)
+			if (actions.length > 0) {
+				reportActions.value[report.name] = actions
+			}
+		} catch {
+			// Non-critical
+		}
+	}
+}
+
+async function handleWorkflowAction({ report, action }) {
+	if (offline.value) {
+		showError(__("Workflow actions require an internet connection"))
+		return
+	}
+	try {
+		await expenseStore.applyReportAction(report.name, action)
+		showSuccess(__("{0}: {1}", [report.name, action]))
+		await loadReportActions()
+	} catch (error) {
+		showError(error.message || __("Failed to apply action"))
 	}
 }
 </script>

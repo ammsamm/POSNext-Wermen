@@ -148,3 +148,65 @@ def create_bulk_report(selected):
         )
 
     return create_bulk_expense_report(selected)
+
+
+# ==========================================
+# Workflow Transitions (Employee Actions)
+# ==========================================
+
+
+@frappe.whitelist()
+def apply_workflow_action(report_name, action):
+    """Apply a workflow action to an Expense Report.
+
+    Employee-available actions:
+      - Submit to Manager (Draft → Pending Manager)
+      - Recall (Pending Manager → Draft)
+      - Revise (Rejected → Draft)
+    """
+    allowed_actions = ["Submit to Manager", "Recall", "Revise"]
+    if action not in allowed_actions:
+        frappe.throw(
+            _("Action '{0}' is not allowed from POS.").format(action),
+            frappe.PermissionError,
+        )
+
+    doc = frappe.get_doc("Expense Report", report_name)
+
+    # Verify the current user owns this report
+    current = _get_current_employee()
+    if not current or doc.employee != current.name:
+        frappe.throw(
+            _("You can only manage your own expense reports."),
+            frappe.PermissionError,
+        )
+
+    frappe.model.workflow.apply_workflow(doc, action)
+    doc.reload()
+
+    return {
+        "name": doc.name,
+        "workflow_state": doc.workflow_state,
+        "docstatus": doc.docstatus,
+    }
+
+
+@frappe.whitelist()
+def get_report_actions(report_name):
+    """Get available workflow actions for an Expense Report."""
+    doc = frappe.get_doc("Expense Report", report_name)
+
+    # Verify ownership
+    current = _get_current_employee()
+    if not current or doc.employee != current.name:
+        return []
+
+    try:
+        from frappe.model.workflow import get_transitions
+
+        transitions = get_transitions(doc)
+        # Only return employee-level actions
+        allowed = {"Submit to Manager", "Recall", "Revise"}
+        return [t.get("action") for t in transitions if t.get("action") in allowed]
+    except Exception:
+        return []
