@@ -1,21 +1,21 @@
 <template>
 	<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
 		<!-- Card Header -->
-		<div class="p-4 border-b bg-gray-50">
-			<div class="flex items-start justify-between">
-				<div>
-					<div class="flex items-center gap-2">
-						<h3 class="text-sm font-bold text-gray-900">{{ report.name }}</h3>
+		<div class="p-3 sm:p-4 border-b bg-gray-50">
+			<div class="flex items-start justify-between gap-2">
+				<div class="min-w-0">
+					<div class="flex items-center gap-2 flex-wrap">
+						<h3 class="text-sm font-bold text-gray-900 truncate">{{ report.name }}</h3>
 						<span
 							:class="[
-								'px-2 py-0.5 text-xs font-semibold rounded-full',
+								'px-2 py-0.5 text-xs font-semibold rounded-full whitespace-nowrap flex-shrink-0',
 								workflowBadgeClass
 							]"
 						>
 							{{ workflowLabel }}
 						</span>
 					</div>
-					<p class="text-xs text-gray-500 mt-1">
+					<p class="text-xs text-gray-500 mt-1 truncate">
 						{{ report.employee_name }}
 					</p>
 				</div>
@@ -31,8 +31,8 @@
 		</div>
 
 		<!-- Workflow Step Indicator -->
-		<div class="px-4 py-3 border-b border-gray-100">
-			<div class="flex items-center gap-1">
+		<div class="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-100 overflow-x-auto">
+			<div class="flex items-center gap-1 flex-nowrap min-w-max">
 				<div
 					v-for="(step, idx) in workflowSteps"
 					:key="step.id"
@@ -40,19 +40,19 @@
 				>
 					<div
 						:class="[
-							'w-2 h-2 rounded-full',
+							'w-2 h-2 rounded-full flex-shrink-0',
 							step.active ? step.color : step.reached ? step.color : 'bg-gray-300'
 						]"
 					></div>
 					<span
 						:class="[
-							'text-xs',
+							'text-xs whitespace-nowrap',
 							step.active ? 'font-semibold text-gray-900' : step.reached ? 'text-gray-600' : 'text-gray-400'
 						]"
 					>
 						{{ step.label }}
 					</span>
-					<svg v-if="idx < workflowSteps.length - 1" class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<svg v-if="idx < workflowSteps.length - 1" class="w-3 h-3 text-gray-300 flex-shrink-0 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
 					</svg>
 				</div>
@@ -60,7 +60,7 @@
 		</div>
 
 		<!-- Actions -->
-		<div v-if="availableActions.length > 0" class="px-4 py-3 flex items-center gap-2">
+		<div v-if="availableActions.length > 0" class="px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 flex-wrap">
 			<button
 				v-for="action in availableActions"
 				:key="action"
@@ -162,7 +162,7 @@ const availableActions = computed(() => {
 })
 
 function actionButtonClass(action) {
-	const base = "px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
+	const base = "px-3 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[36px]"
 	if (action === "Submit to Manager") {
 		return `${base} text-white bg-green-600 hover:bg-green-700`
 	}

@@ -7,24 +7,24 @@
 			@click.self="handleClose"
 		>
 			<!-- Main Container -->
-			<div class="fixed inset-0 flex items-center justify-center p-4">
-				<div class="w-full h-full max-w-[95vw] max-h-[95vh] bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col">
+			<div class="fixed inset-0 flex items-center justify-center sm:p-4">
+				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-green-50 to-green-50">
-						<div class="flex items-center gap-3">
-							<div class="p-2 bg-green-100 rounded-lg">
-								<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-green-50 to-green-50 flex-shrink-0">
+						<div class="flex items-center gap-2 sm:gap-3 min-w-0">
+							<div class="p-1.5 sm:p-2 bg-green-100 rounded-lg flex-shrink-0">
+								<svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
 								</svg>
 							</div>
-							<div>
-								<h2 class="text-xl font-bold text-gray-900">{{ __('Expense Management') }}</h2>
-								<p class="text-sm text-gray-600 flex items-center mt-0.5">
+							<div class="min-w-0">
+								<h2 class="text-base sm:text-xl font-bold text-gray-900 truncate">{{ __('Expense Management') }}</h2>
+								<p class="text-xs sm:text-sm text-gray-600 flex items-center mt-0.5 truncate">
 									{{ expenseStore.employeeName }}
 								</p>
 							</div>
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
 							<Button
 								@click="handleRefresh"
 								:loading="isLoading"
@@ -36,11 +36,11 @@
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
 									</svg>
 								</template>
-								{{ __('Refresh') }}
+								<span class="hidden sm:inline">{{ __('Refresh') }}</span>
 							</Button>
 							<button
 								@click="handleClose"
-								class="p-2 hover:bg-white/50 rounded-lg transition-colors"
+								class="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/50 rounded-lg transition-colors"
 							>
 								<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -50,11 +50,11 @@
 					</div>
 
 					<!-- Offline Banner -->
-					<div v-if="offline" class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center gap-3">
+					<div v-if="offline" class="bg-amber-50 border-b border-amber-200 px-4 sm:px-6 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 flex-shrink-0">
 						<svg class="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414"/>
 						</svg>
-						<div class="flex-1 text-start">
+						<div class="flex-1 text-start min-w-0">
 							<p class="text-sm font-medium text-amber-800">{{ __('You are offline') }}</p>
 							<p class="text-xs text-amber-700">{{ __('Expenses will sync when you reconnect.') }}</p>
 						</div>
@@ -63,7 +63,7 @@
 					<!-- Employee Error -->
 					<div v-if="!expenseStore.loadingEmployee && !expenseStore.hasEmployee" class="flex-1 flex items-center justify-center">
 						<div class="text-center px-6">
-							<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg class="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
 							</svg>
 							<p class="text-gray-600 font-medium">{{ __('No Employee Record Found') }}</p>
@@ -74,28 +74,28 @@
 					<!-- Main Content (only when employee is available) -->
 					<template v-else-if="expenseStore.hasEmployee">
 						<!-- Tabs Navigation -->
-						<div class="border-b border-gray-200 bg-gray-50">
-							<nav class="flex gap-2 px-6" :aria-label="__('Tabs')">
+						<div class="border-b border-gray-200 bg-gray-50 flex-shrink-0">
+							<nav class="flex gap-1 sm:gap-2 px-3 sm:px-6 overflow-x-auto" :aria-label="__('Tabs')">
 								<button
 									v-for="tab in visibleTabs"
 									:key="tab.id"
 									@click="activeTab = tab.id"
 									:class="[
-										'px-4 py-3 text-sm font-semibold transition-all border-b-2 relative',
+										'px-3 sm:px-4 py-3 text-sm font-semibold transition-all border-b-2 relative whitespace-nowrap min-h-[44px]',
 										activeTab === tab.id
 											? 'text-green-600 border-green-500'
 											: 'text-gray-600 border-transparent hover:text-gray-800 hover:border-gray-300'
 									]"
 								>
-									<div class="flex items-center gap-2">
-										<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div class="flex items-center gap-1.5 sm:gap-2">
+										<svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="tab.icon"/>
 										</svg>
 										<span>{{ tab.label }}</span>
 										<span
 											v-if="tab.badge > 0"
 											:class="[
-												'ms-1 px-2 py-0.5 text-xs font-bold rounded-full',
+												'ms-0.5 sm:ms-1 px-1.5 sm:px-2 py-0.5 text-xs font-bold rounded-full',
 												activeTab === tab.id
 													? 'bg-green-100 text-green-800'
 													: 'bg-gray-200 text-gray-700'
@@ -116,16 +116,16 @@
 								<p class="text-sm font-medium text-gray-600">{{ __('Loading...') }}</p>
 							</div>
 
-							<div v-else class="p-6">
+							<div v-else class="p-3 sm:p-6">
 								<!-- My Expenses Tab -->
 								<div v-if="activeTab === 'expenses'">
 									<!-- Filter + New Button Row -->
-									<div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+									<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
 										<div class="flex items-center gap-2 flex-wrap">
 											<button
 												@click="expenseFilter = 'all'"
 												:class="[
-													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+													'px-3 sm:px-4 py-2 rounded-lg font-medium text-sm transition-all min-h-[44px]',
 													expenseFilter === 'all'
 														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -136,7 +136,7 @@
 											<button
 												@click="expenseFilter = 'draft'"
 												:class="[
-													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+													'px-3 sm:px-4 py-2 rounded-lg font-medium text-sm transition-all min-h-[44px]',
 													expenseFilter === 'draft'
 														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -147,7 +147,7 @@
 											<button
 												@click="expenseFilter = 'submitted'"
 												:class="[
-													'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+													'px-3 sm:px-4 py-2 rounded-lg font-medium text-sm transition-all min-h-[44px]',
 													expenseFilter === 'submitted'
 														? 'bg-green-100 text-gray-900 shadow-md border border-green-300'
 														: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -162,13 +162,13 @@
 												v-if="selectedExpenses.length > 0 && !offline"
 												@click="handleBulkReport"
 												:disabled="creatingReport"
-												class="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50"
+												class="px-3 sm:px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors disabled:opacity-50 min-h-[44px]"
 											>
 												{{ __('Create Report ({0})', [selectedExpenses.length]) }}
 											</button>
 											<button
 												@click="handleNewExpense"
-												class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-sm"
+												class="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-sm min-h-[44px]"
 											>
 												{{ __('+ New Expense') }}
 											</button>
@@ -182,8 +182,8 @@
 									</div>
 
 									<!-- Empty State -->
-									<div v-else-if="filteredExpenses.length === 0" class="flex flex-col items-center justify-center py-16 text-center">
-										<svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div v-else-if="filteredExpenses.length === 0" class="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
+										<svg class="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
 										</svg>
 										<p class="text-gray-600 font-medium">{{ __('No Expenses') }}</p>
@@ -191,7 +191,7 @@
 									</div>
 
 									<!-- Expense Cards -->
-									<div v-else class="flex flex-col gap-4">
+									<div v-else class="flex flex-col gap-3 sm:gap-4">
 										<ExpenseCard
 											v-for="expense in filteredExpenses"
 											:key="expense.name"
@@ -216,8 +216,8 @@
 									</div>
 
 									<!-- Empty State -->
-									<div v-else-if="expenseStore.expenseReports.length === 0" class="flex flex-col items-center justify-center py-16 text-center">
-										<svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div v-else-if="expenseStore.expenseReports.length === 0" class="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
+										<svg class="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
 										</svg>
 										<p class="text-gray-600 font-medium">{{ __('No Expense Reports') }}</p>
@@ -225,7 +225,7 @@
 									</div>
 
 									<!-- Report Cards -->
-									<div v-else class="flex flex-col gap-4">
+									<div v-else class="flex flex-col gap-3 sm:gap-4">
 										<ExpenseReportCard
 											v-for="report in expenseStore.expenseReports"
 											:key="report.name"
@@ -239,7 +239,7 @@
 
 								<!-- Pending Sync Tab -->
 								<div v-if="activeTab === 'pending'">
-									<div class="flex items-center justify-between mb-4">
+									<div class="flex items-center justify-between mb-4 gap-2">
 										<p class="text-sm text-gray-600">
 											{{ __('({0}) expenses waiting to sync', [expenseStore.pendingCount]) }}
 										</p>
@@ -247,26 +247,26 @@
 											v-if="!offline && expenseStore.pendingCount > 0"
 											@click="handleSyncNow"
 											:disabled="syncing"
-											class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+											class="px-3 sm:px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 min-h-[44px] flex-shrink-0"
 										>
 											{{ syncing ? __('Syncing...') : __('Sync Now') }}
 										</button>
 									</div>
 
 									<!-- Offline Warning for Sync -->
-									<div v-if="offline" class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+									<div v-if="offline" class="bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4 mb-4">
 										<p class="text-sm text-amber-800 font-medium">{{ __('Connect to the internet to sync expenses.') }}</p>
 									</div>
 
 									<!-- Pending Expense Cards -->
-									<div v-if="expenseStore.offlineExpenses.length === 0" class="flex flex-col items-center justify-center py-16 text-center">
-										<svg class="w-16 h-16 text-green-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<div v-if="expenseStore.offlineExpenses.length === 0" class="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
+										<svg class="w-12 h-12 sm:w-16 sm:h-16 text-green-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
 										</svg>
 										<p class="text-gray-600 font-medium">{{ __('All Synced') }}</p>
 										<p class="text-gray-500 text-sm mt-1">{{ __('No pending expenses to sync.') }}</p>
 									</div>
-									<div v-else class="flex flex-col gap-4">
+									<div v-else class="flex flex-col gap-3 sm:gap-4">
 										<ExpenseCard
 											v-for="expense in expenseStore.offlineExpenses"
 											:key="expense.name"

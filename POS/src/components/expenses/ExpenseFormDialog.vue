@@ -2,18 +2,18 @@
 	<Transition name="fade">
 		<div
 			v-if="show"
-			class="fixed inset-0 bg-black bg-opacity-50 z-[400] flex items-center justify-center p-4"
+			class="fixed inset-0 bg-black bg-opacity-50 z-[400] flex items-end sm:items-center justify-center sm:p-4"
 			@click.self="handleClose"
 		>
-			<div class="w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+			<div class="w-full max-w-lg bg-white rounded-t-xl sm:rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
 				<!-- Header -->
-				<div class="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-green-50 to-green-50 flex-shrink-0">
-					<h3 class="text-lg font-bold text-gray-900">
+				<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-green-50 to-green-50 flex-shrink-0">
+					<h3 class="text-base sm:text-lg font-bold text-gray-900">
 						{{ expense ? __('Edit Expense') : __('New Expense') }}
 					</h3>
 					<button
 						@click="handleClose"
-						class="p-1.5 hover:bg-white/50 rounded-lg transition-colors"
+						class="p-1.5 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/50 rounded-lg transition-colors"
 					>
 						<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -22,14 +22,14 @@
 				</div>
 
 				<!-- Form (scrollable) -->
-				<div class="p-6 space-y-4 overflow-y-auto flex-1">
+				<div class="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
 					<!-- Description -->
 					<div>
 						<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Description') }} *</label>
 						<input
 							v-model="form.expense_description"
 							type="text"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm min-h-[44px]"
 							:placeholder="__('What is this expense for?')"
 						/>
 					</div>
@@ -39,7 +39,7 @@
 						<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Category') }} *</label>
 						<select
 							v-model="form.category"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white min-h-[44px]"
 						>
 							<option value="">{{ __('Select Category') }}</option>
 							<option v-for="cat in categories" :key="cat.name" :value="cat.name">
@@ -49,7 +49,7 @@
 					</div>
 
 					<!-- Amount and Paid By -->
-					<div class="grid grid-cols-2 gap-4">
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Amount') }} *</label>
 							<input
@@ -57,7 +57,7 @@
 								type="number"
 								step="0.01"
 								min="0"
-								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm min-h-[44px]"
 								placeholder="0.00"
 							/>
 						</div>
@@ -65,7 +65,7 @@
 							<label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Paid By') }}</label>
 							<select
 								v-model="form.paid_by"
-								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
+								class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white min-h-[44px]"
 							>
 								<option v-for="opt in paidByOptions" :key="opt" :value="opt">
 									{{ opt }}
@@ -80,7 +80,7 @@
 						<input
 							v-model="form.expense_date"
 							type="date"
-							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+							class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm min-h-[44px]"
 						/>
 					</div>
 
@@ -116,11 +116,11 @@
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
 								</svg>
 								<!-- File name -->
-								<span class="text-sm text-gray-700 truncate flex-1">
+								<span class="text-sm text-gray-700 truncate flex-1 min-w-0">
 									{{ att.file_name }}
 								</span>
 								<!-- File size -->
-								<span v-if="att.size" class="text-xs text-gray-400 flex-shrink-0">
+								<span v-if="att.size" class="text-xs text-gray-400 flex-shrink-0 hidden sm:inline">
 									{{ formatFileSize(att.size) }}
 								</span>
 								<!-- Uploading indicator -->
@@ -131,7 +131,7 @@
 								<button
 									@click="removeAttachment(idx)"
 									:disabled="saving"
-									class="p-1 text-red-500 hover:bg-red-50 rounded transition-colors flex-shrink-0"
+									class="p-1.5 min-h-[36px] min-w-[36px] flex items-center justify-center text-red-500 hover:bg-red-50 rounded transition-colors flex-shrink-0"
 								>
 									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -145,7 +145,7 @@
 							v-if="attachments.length < MAX_ATTACHMENTS"
 							@click="$refs.fileInput.click()"
 							type="button"
-							class="w-full px-3 py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition-colors text-center"
+							class="w-full px-3 py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-green-400 hover:text-green-600 transition-colors text-center min-h-[44px]"
 						>
 							<svg class="w-5 h-5 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -167,17 +167,17 @@
 				</div>
 
 				<!-- Footer -->
-				<div class="flex items-center justify-end gap-3 px-6 py-4 border-t bg-gray-50 flex-shrink-0">
+				<div class="flex items-center justify-end gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t bg-gray-50 flex-shrink-0">
 					<button
 						@click="handleClose"
-						class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+						class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px]"
 					>
 						{{ __('Cancel') }}
 					</button>
 					<button
 						@click="handleSave"
 						:disabled="saving || !isValid"
-						class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						class="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
 					>
 						{{ saving ? __('Saving...') : __('Save') }}
 					</button>
