@@ -249,7 +249,7 @@ def create_bulk_report(selected):
             filters={"name": ["in", names], "docstatus": 0},
             fields=["name", "expense_date", "category", "expense_description", "total"],
         )
-        selected = _json.dumps(expenses)
+        selected = frappe.as_json(expenses)
 
     return create_bulk_expense_report(selected)
 
