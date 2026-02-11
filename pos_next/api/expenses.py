@@ -66,6 +66,7 @@ def get_expenses(employee, limit=100):
             "company",
             "notes",
             "docstatus",
+            "modified",
         ],
         order_by="expense_date desc",
         limit_page_length=int(limit),

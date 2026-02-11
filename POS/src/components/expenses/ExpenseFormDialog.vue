@@ -210,9 +210,12 @@ async function handleSave() {
 
 	try {
 		const data = { ...form.value }
-		// If editing an existing expense, include its name
+		// If editing an existing expense, include name and modified for timestamp check
 		if (props.expense?.name && !props.expense._offline) {
 			data.name = props.expense.name
+			if (props.expense.modified) {
+				data.modified = props.expense.modified
+			}
 		}
 		emit("saved", data)
 		show.value = false
