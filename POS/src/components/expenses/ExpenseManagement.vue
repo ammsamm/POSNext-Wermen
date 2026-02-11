@@ -499,6 +499,8 @@ async function handleCreateReport(expense) {
 	try {
 		await expenseStore.createSingleReport(expense.name)
 		showSuccess(__("Expense report created"))
+		activeTab.value = "reports"
+		await loadReportActions()
 	} catch (error) {
 		showError(error.message || __("Failed to create report"))
 	} finally {
@@ -516,6 +518,8 @@ async function handleBulkReport() {
 		await expenseStore.createBulkReport(selectedExpenses.value)
 		selectedExpenses.value = []
 		showSuccess(__("Expense report created"))
+		activeTab.value = "reports"
+		await loadReportActions()
 	} catch (error) {
 		showError(error.message || __("Failed to create report"))
 	} finally {
