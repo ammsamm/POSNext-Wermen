@@ -51,9 +51,10 @@ export const pingServer = async () => {
 		const controller = new AbortController()
 		const timeoutId = setTimeout(() => controller.abort(), SYNC_CONFIG.PING_TIMEOUT_MS)
 
-		const response = await fetch("/api/method/pos_next.api.ping", {
+		const response = await fetch(`/api/method/pos_next.api.ping?_=${Date.now()}`, {
 			method: "GET",
 			signal: controller.signal,
+			cache: "no-store",
 		})
 
 		clearTimeout(timeoutId)
