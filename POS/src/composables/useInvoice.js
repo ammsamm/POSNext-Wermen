@@ -48,6 +48,9 @@ export function useInvoice() {
 			return { data: JSON.stringify(params.data) }
 		},
 		auto: false,
+		onError(error) {
+			console.debug("updateInvoiceResource error (handled by caller):", error.message)
+		},
 	})
 
 	const submitInvoiceResource = createResource({
@@ -79,6 +82,9 @@ export function useInvoice() {
 			}
 		},
 		auto: false,
+		onError(error) {
+			console.debug("validateCartItemsResource error (handled by caller):", error.message)
+		},
 	})
 
 	const applyOffersResource = createResource({
@@ -104,11 +110,17 @@ export function useInvoice() {
 	const getItemDetailsResource = createResource({
 		url: "pos_next.api.items.get_item_details",
 		auto: false,
+		onError(error) {
+			console.debug("getItemDetailsResource error (handled by caller):", error.message)
+		},
 	})
 
 	const getTaxesResource = createResource({
 		url: "pos_next.api.pos_profile.get_taxes",
 		auto: false,
+		onError(error) {
+			console.debug("getTaxesResource error (handled by caller):", error.message)
+		},
 	})
 
 	const getDefaultCustomerResource = createResource({
@@ -117,11 +129,17 @@ export function useInvoice() {
 			return { pos_profile }
 		},
 		auto: false,
+		onError(error) {
+			console.debug("getDefaultCustomerResource error (handled by caller):", error.message)
+		},
 	})
 
 	const cleanupDraftsResource = createResource({
 		url: "pos_next.api.invoices.cleanup_old_drafts",
 		auto: false,
+		onError(error) {
+			console.debug("cleanupDraftsResource error (handled by caller):", error.message)
+		},
 	})
 
 	// ========================================================================

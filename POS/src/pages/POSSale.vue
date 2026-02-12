@@ -1370,6 +1370,8 @@ watch(
 
 		// Set new timer - reapply offers after 500ms of no changes
 		offerReapplyTimer.value = setTimeout(async () => {
+			// Skip server offer reapplication when offline — offers will reapply on reconnect
+			if (offlineStore.isOffline) return;
 			await cartStore.reapplyOffer(shiftStore.currentProfile);
 		}, 500);
 	}
@@ -1392,6 +1394,8 @@ watch(
 			// Reapply offers immediately when customer changes
 			// This will discover newly eligible offers even if cart has no current offers
 			offerReapplyTimer.value = setTimeout(async () => {
+				// Skip server offer reapplication when offline
+				if (offlineStore.isOffline) return;
 				await cartStore.reapplyOffer(shiftStore.currentProfile);
 			}, 300);
 		}

@@ -52,6 +52,9 @@ export function useItems(posProfile, cartItems = ref([])) {
 	const searchByBarcodeResource = createResource({
 		url: "pos_next.api.items.search_by_barcode",
 		auto: false,
+		onError(error) {
+			console.debug("searchByBarcodeResource error (handled by caller):", error.message)
+		},
 	})
 
 	// Computed - items with adjusted stock based on cart

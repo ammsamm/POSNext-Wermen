@@ -700,6 +700,9 @@ export const usePOSCartStore = defineStore("posCart", () => {
 			return false
 		}
 
+		// Skip server-side offer reapplication when offline
+		if (offlineState.isOffline) return false
+
 		// Check if operation was cancelled
 		if (signal?.aborted) return false
 
