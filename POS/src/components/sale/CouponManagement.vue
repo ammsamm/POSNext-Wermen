@@ -729,13 +729,16 @@ const campaignsResource = createResource({
 		return {
 			doctype: "Campaign",
 			fields: ["name"],
-			filters: { disabled: 0 },
 			limit_page_length: 999,
 		}
 	},
 	auto: false,
 	onSuccess(data) {
 		campaigns.value = data || []
+	},
+	onError(error) {
+		console.error("Error loading campaigns:", error)
+		campaigns.value = []
 	},
 })
 
