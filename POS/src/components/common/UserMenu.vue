@@ -2,7 +2,7 @@
 	<div ref="menuRef" class="relative">
 		<button
 			@click="isOpen = !isOpen"
-			class="flex items-center gap-1.5 sm:gap-3 px-1.5 sm:px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors min-h-[44px] touch-manipulation"
+			class="flex items-center gap-1.5 sm:gap-3 px-2 sm:px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors min-h-[44px] touch-manipulation"
 		>
 			<div class="text-end mx-1 hidden sm:block">
 				<p class="text-sm font-semibold text-gray-900">{{ userName }}</p>
@@ -17,7 +17,7 @@
 		<div
 			v-if="isOpen"
 			@click="handleMenuItemClick"
-			class="absolute end-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250]"
+			class="fixed inset-x-3 top-14 sm:absolute sm:inset-auto sm:end-0 sm:top-full sm:mt-2 sm:w-60 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250] max-h-[80vh] overflow-y-auto"
 		>
 			<!-- User Info Header -->
 			<div class="px-4 py-3 border-b border-gray-100 flex items-center">

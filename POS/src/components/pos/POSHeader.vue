@@ -78,7 +78,7 @@
 			</div>
 
 			<!-- Main Header Content -->
-			<div class="flex-1 flex justify-between items-center gap-1 sm:gap-2 px-1 sm:px-4 md:px-6">
+			<div class="flex-1 flex justify-between items-center gap-1 sm:gap-2 px-2 sm:px-4 md:px-6">
 				<!-- Left Side: Brand Info -->
 				<div class="flex items-center gap-1 sm:gap-4 min-w-0 flex-1 overflow-hidden">
 					<div class="min-w-0 flex-shrink overflow-hidden">
