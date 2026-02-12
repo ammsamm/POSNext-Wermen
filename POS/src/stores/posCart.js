@@ -1267,33 +1267,10 @@ export const usePOSCartStore = defineStore("posCart", () => {
 	 * @param {string} newUom - New UOM
 	 * @param {number} qty - Quantity for pricing
 	 */
-	async function applyUomChange(cartItem, newUom, qty) {
+	function applyUomChange(cartItem, newUom) {
 		const uomData = cartItem.item_uoms?.find((u) => u.uom === newUom)
-		let rate = null
-		let conversionFactor = uomData?.conversion_factor || 1
-
-		// When online, fetch fresh pricing; when offline, use cached uom_prices
-		if (!offlineState.isOffline) {
-			try {
-				const itemDetails = await getItemDetailsResource.submit({
-					item_code: cartItem.item_code,
-					pos_profile: posProfile.value,
-					customer: customer.value?.name || customer.value,
-					qty,
-					uom: newUom,
-				})
-				rate = itemDetails.price_list_rate || itemDetails.rate
-				conversionFactor = uomData?.conversion_factor || itemDetails.conversion_factor || 1
-			} catch {
-				// Network failed, fall through to cached price
-			}
-		}
-
-		// Fallback to cached UOM price if server call was skipped or failed
-		if (rate == null) {
-			const cachedPrice = cartItem.uom_prices?.[newUom]
-			rate = cachedPrice || (cartItem.rate * conversionFactor)
-		}
+		const conversionFactor = uomData?.conversion_factor || 1
+		const rate = cartItem.uom_prices?.[newUom] || (cartItem.rate * conversionFactor)
 
 		cartItem.uom = newUom
 		cartItem.conversion_factor = conversionFactor
