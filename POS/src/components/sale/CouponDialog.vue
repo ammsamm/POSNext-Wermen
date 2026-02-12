@@ -148,6 +148,7 @@
 import { DEFAULT_CURRENCY, formatCurrency as formatCurrencyUtil } from "@/utils/currency"
 import { Button, Dialog, Input, createResource } from "frappe-ui"
 import { ref, watch } from "vue"
+import { isOffline } from "@/utils/offline"
 import { useInvoice } from "@/composables/useInvoice"
 import { useToast } from "@/composables/useToast"
 
@@ -244,7 +245,7 @@ watch(
 )
 
 async function loadGiftCards() {
-	if (!props.customer || !props.company) return
+	if (!props.customer || !props.company || isOffline()) return
 	try {
 		await giftCardsResource.reload()
 	} catch (error) {
