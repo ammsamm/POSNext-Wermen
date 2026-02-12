@@ -36,6 +36,43 @@
 						@click.stop
 						class="absolute top-full start-2 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250]"
 					>
+						<!-- Quick Actions Row -->
+						<div class="flex items-center justify-around px-3 py-2 border-b border-gray-100 mb-1">
+							<button
+								@click="showMobileMenu = false; $emit('sync-click')"
+								class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[56px]"
+								:title="isOffline ? __('Offline') : __('Online')"
+							>
+								<svg v-if="!isOffline" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+								</svg>
+								<svg v-else class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"/>
+								</svg>
+								<span class="text-[10px] text-gray-500">{{ isOffline ? __('Offline') : __('Sync') }}</span>
+							</button>
+							<button
+								@click="showMobileMenu = false; showCacheTooltip = !showCacheTooltip"
+								class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[56px]"
+								:title="__('Cache')"
+							>
+								<svg class="w-5 h-5" :class="getCacheIconColor()" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M12 2C8.13 2 5 3.12 5 4.5V7c0 1.38 3.13 2.5 7 2.5S19 8.38 19 7V4.5C19 3.12 15.87 2 12 2zM5 9v3c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5V9c0 1.38-3.13 2.5-7 2.5S5 10.38 5 9zm0 5v3c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5v-3c0 1.38-3.13 2.5-7 2.5S5 15.38 5 14z"/>
+								</svg>
+								<span class="text-[10px] text-gray-500">{{ __('Cache') }}</span>
+							</button>
+							<button
+								@click="showMobileMenu = false; $emit('refresh-click')"
+								class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[56px]"
+								:title="__('Refresh')"
+							>
+								<svg class="w-5 h-5 text-gray-600" :class="isRefreshing ? 'animate-spin' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+								</svg>
+								<span class="text-[10px] text-gray-500">{{ __('Refresh') }}</span>
+							</button>
+						</div>
+						<!-- Navigation Items -->
 						<button
 							@click="handleMobileMenuClick('promotions')"
 							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-green-50 flex items-center gap-3 transition-colors"
@@ -83,6 +120,8 @@
 				<div class="flex items-center gap-1 sm:gap-4 min-w-0 flex-1 overflow-hidden">
 					<div class="min-w-0 flex-shrink overflow-hidden">
 						<div class="flex items-center gap-1 sm:gap-2">
+							<!-- Mobile WiFi dot indicator -->
+							<span class="sm:hidden w-2 h-2 rounded-full flex-shrink-0" :class="isOffline ? 'bg-orange-500' : 'bg-green-500'"></span>
 							<h1 class="text-sm sm:text-base font-semibold text-gray-800 truncate flex-shrink tracking-tight">{{ 'POS Next' }}</h1>
 							<span class="hidden sm:inline-flex relative items-center px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[10px] font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full shadow-sm flex-shrink-0">
 								<span class="relative">v{{ appVersion }}</span>
@@ -120,11 +159,11 @@
 
 				<!-- Right Side: Controls -->
 				<div class="flex items-center gap-0.5 sm:gap-1 md:gap-2 flex-shrink-0">
-					<!-- WiFi/Offline Status -->
+					<!-- WiFi/Offline Status - Hidden on mobile, shown in hamburger menu -->
 					<button
 						@click="$emit('sync-click')"
 						:class="[
-							'p-1.5 sm:p-2.5 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors relative group touch-manipulation',
+							'hidden sm:flex p-2.5 min-h-[44px] min-w-[44px] items-center justify-center hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors relative group touch-manipulation',
 							isSyncing ? 'animate-pulse' : ''
 						]"
 						:title="isOffline ? __('Offline ({0} pending)', [pendingInvoicesCount]) : __('Online - Click to sync')"
@@ -267,13 +306,13 @@
 						/>
 					</div>
 
-					<!-- Refresh -->
+					<!-- Refresh - Hidden on mobile, shown in hamburger menu -->
 					<ActionButton
 						:icon="refreshIcon"
 						:title="isRefreshing ? __('Refreshing...') : __('Refresh Items')"
 						@click="$emit('refresh-click')"
 						:class="[
-							'touch-manipulation p-1 sm:p-2',
+							'hidden sm:flex touch-manipulation p-2',
 							isRefreshing ? 'animate-spin' : ''
 						]"
 						:aria-label="isRefreshing ? __('Refreshing items...') : __('Refresh items list')"
