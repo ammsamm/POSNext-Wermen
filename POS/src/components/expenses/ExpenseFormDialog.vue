@@ -7,8 +7,8 @@
 		>
 			<div class="w-full max-w-lg bg-white rounded-t-xl sm:rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
 				<!-- Header -->
-				<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-green-50 to-green-50 flex-shrink-0">
-					<h3 class="text-base sm:text-lg font-bold text-gray-900">
+				<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-emerald-50/80 to-green-50/60 flex-shrink-0 antialiased">
+					<h3 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight">
 						{{ expense ? __('Edit Expense') : __('New Expense') }}
 					</h3>
 					<button

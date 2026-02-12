@@ -10,17 +10,17 @@
 			<div class="fixed inset-0 flex items-center justify-center p-4 md:p-6">
 				<div class="w-full max-w-5xl max-h-[100dvh] sm:max-h-[90vh] bg-white sm:rounded-xl shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-						<div class="flex items-center gap-3">
-							<div class="p-2 bg-blue-100 rounded-lg">
-								<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-slate-50 to-blue-50/60 antialiased">
+						<div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+							<div class="p-2 bg-blue-100/80 rounded-xl flex-shrink-0">
+								<svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
 								</svg>
 							</div>
-							<div>
-								<h2 class="text-xl font-bold text-gray-900">{{ __('POS Settings') }}</h2>
-								<p class="text-sm text-gray-600 flex items-center mt-0.5">
+							<div class="min-w-0">
+								<h2 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight truncate">{{ __('POS Settings') }}</h2>
+								<p class="text-xs sm:text-sm text-gray-500 flex items-center mt-0.5 truncate">
 									<svg class="w-4 h-4 me-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
 									</svg>
@@ -103,7 +103,7 @@
 												</svg>
 											</div>
 											<div>
-												<h3 class="text-lg font-bold text-gray-900">{{ __('Stock Management') }}</h3>
+												<h3 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight">{{ __('Stock Management') }}</h3>
 												<p class="text-xs text-gray-600 mt-0.5">{{ __('Configure warehouse and inventory settings') }}</p>
 											</div>
 										</div>
@@ -267,7 +267,7 @@
 												</svg>
 											</div>
 											<div>
-												<h3 class="text-lg font-bold text-gray-900">{{ __('Sales Management') }}</h3>
+												<h3 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight">{{ __('Sales Management') }}</h3>
 												<p class="text-xs text-gray-600 mt-0.5">{{ __('Configure pricing, discounts, and sales operations') }}</p>
 											</div>
 										</div>

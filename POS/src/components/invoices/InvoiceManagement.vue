@@ -10,15 +10,15 @@
 			<div class="fixed inset-0 flex items-center justify-center sm:p-4">
 				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-indigo-50 to-purple-50 flex-shrink-0">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-indigo-50/80 to-purple-50/60 flex-shrink-0 antialiased">
 						<div class="flex items-center gap-2 sm:gap-3 min-w-0">
-							<div class="p-1.5 sm:p-2 bg-indigo-100 rounded-lg flex-shrink-0">
+							<div class="p-1.5 sm:p-2 bg-indigo-100/80 rounded-xl flex-shrink-0">
 								<svg class="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
 								</svg>
 							</div>
 							<div class="min-w-0">
-								<h2 class="text-base sm:text-xl font-bold text-gray-900 truncate">{{ __('Invoice Management') }}</h2>
+								<h2 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight truncate">{{ __('Invoice Management') }}</h2>
 								<p class="text-xs sm:text-sm text-gray-600 flex items-center mt-0.5 truncate">
 									{{ __('Manage all your invoices in one place') }}
 								</p>

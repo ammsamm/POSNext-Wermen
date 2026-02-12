@@ -15,7 +15,7 @@
 					<div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
 						<div class="flex-1">
 							<div class="flex items-center gap-3 mb-2 flex-wrap">
-								<h3 class="text-lg md:text-xl font-bold text-gray-900">{{ invoiceData.name }}</h3>
+								<h3 class="text-base md:text-lg font-semibold text-gray-800 tracking-tight">{{ invoiceData.name }}</h3>
 								<span
 									v-if="invoiceData.is_return"
 									class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800"

@@ -10,12 +10,14 @@
 			<div class="fixed inset-0 flex items-end sm:items-center justify-center sm:p-4">
 				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b">
-						<div class="flex items-center gap-3">
-							<FeatherIcon name="tag" class="w-5 h-5 text-gray-700" />
-							<div>
-								<h2 class="text-lg mb-1 font-semibold text-gray-900">{{ __('Promotion & Coupon Management') }}</h2>
-								<p class="text-sm text-gray-600">{{ __('Manage promotional schemes and coupons') }}</p>
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-green-50/60 to-emerald-50/40 antialiased">
+						<div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+							<div class="p-1.5 sm:p-2 bg-green-100/80 rounded-xl flex-shrink-0">
+								<FeatherIcon name="tag" class="w-5 h-5 text-green-600" />
+							</div>
+							<div class="min-w-0">
+								<h2 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight truncate">{{ __('Promotion & Coupon Management') }}</h2>
+								<p class="text-xs sm:text-sm text-gray-500 truncate">{{ __('Manage promotional schemes and coupons') }}</p>
 							</div>
 						</div>
 						<div class="flex items-center gap-2">

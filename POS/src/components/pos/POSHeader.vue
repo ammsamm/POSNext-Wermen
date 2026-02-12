@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="bg-white shadow-sm sticky top-0 z-[200]"
+		class="bg-gradient-to-b from-white to-gray-50/80 border-b border-gray-200/80 sticky top-0 z-[200] antialiased"
 	>
 		<div class="flex py-2 sm:py-3">
 			<!-- POS Icon (Desktop) / Hamburger Menu (Mobile) - Aligned with Management Sidebar (64px) -->
@@ -83,9 +83,8 @@
 				<div class="flex items-center gap-1 sm:gap-4 min-w-0 flex-1 overflow-hidden">
 					<div class="min-w-0 flex-shrink overflow-hidden">
 						<div class="flex items-center gap-1 sm:gap-2">
-							<h1 class="text-xs sm:text-base font-bold text-gray-900 truncate flex-shrink">{{ 'POS Next' }}</h1>
-							<span class="hidden sm:inline-flex relative items-center px-1 sm:px-2 py-0.5 text-[8px] sm:text-[10px] font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md shadow-sm hover:shadow-md transition-shadow flex-shrink-0">
-								<span class="absolute inset-0 bg-white/20 rounded-md animate-pulse"></span>
+							<h1 class="text-sm sm:text-base font-semibold text-gray-800 truncate flex-shrink tracking-tight">{{ 'POS Next' }}</h1>
+							<span class="hidden sm:inline-flex relative items-center px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[10px] font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full shadow-sm flex-shrink-0">
 								<span class="relative">v{{ appVersion }}</span>
 							</span>
 						</div>

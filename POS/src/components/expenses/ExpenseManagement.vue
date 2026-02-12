@@ -10,15 +10,15 @@
 			<div class="fixed inset-0 flex items-center justify-center sm:p-4">
 				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 border-b bg-gradient-to-r from-green-50 to-green-50 flex-shrink-0">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b bg-gradient-to-r from-emerald-50/80 to-green-50/60 flex-shrink-0 antialiased">
 						<div class="flex items-center gap-2 sm:gap-3 min-w-0">
-							<div class="p-1.5 sm:p-2 bg-green-100 rounded-lg flex-shrink-0">
+							<div class="p-1.5 sm:p-2 bg-green-100/80 rounded-xl flex-shrink-0">
 								<svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
 								</svg>
 							</div>
 							<div class="min-w-0">
-								<h2 class="text-base sm:text-xl font-bold text-gray-900 truncate">{{ __('Expense Management') }}</h2>
+								<h2 class="text-base sm:text-lg font-semibold text-gray-800 tracking-tight truncate">{{ __('Expense Management') }}</h2>
 								<p class="text-xs sm:text-sm text-gray-600 flex items-center mt-0.5 truncate">
 									{{ expenseStore.employeeName }}
 								</p>
