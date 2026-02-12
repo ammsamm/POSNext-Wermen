@@ -2030,20 +2030,30 @@ async function handleOptionSelected(option) {
 			}
 		} else if (option.type === "uom") {
 			const qty = option.quantity || cartStore.pendingItemQty;
-			const itemDetails = await cartStore.getItemDetailsResource.submit({
-				item_code: cartStore.pendingItem.item_code,
-				pos_profile: cartStore.posProfile,
-				customer: cartStore.customer?.name || cartStore.customer,
-				qty: qty,
-				uom: option.uom,
-			});
+			let uomRate = option.rate;
+
+			// When online, fetch fresh pricing from server; when offline, use cached uom_prices
+			if (!offlineStore.isOffline) {
+				try {
+					const itemDetails = await cartStore.getItemDetailsResource.submit({
+						item_code: cartStore.pendingItem.item_code,
+						pos_profile: cartStore.posProfile,
+						customer: cartStore.customer?.name || cartStore.customer,
+						qty: qty,
+						uom: option.uom,
+					});
+					uomRate = itemDetails.price_list_rate || itemDetails.rate || uomRate;
+				} catch {
+					// Network failed mid-request, fall back to cached price
+				}
+			}
 
 			const itemToAdd = {
 				...cartStore.pendingItem,
 				uom: option.uom,
 				conversion_factor: option.conversion_factor,
-				rate: itemDetails.price_list_rate || itemDetails.rate,
-				price_list_rate: itemDetails.price_list_rate,
+				rate: uomRate,
+				price_list_rate: uomRate,
 			};
 
 			if (itemToAdd.has_batch_no || itemToAdd.has_serial_no) {
