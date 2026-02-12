@@ -120,8 +120,6 @@
 				<div class="flex items-center gap-1 sm:gap-4 min-w-0 flex-1 overflow-hidden">
 					<div class="min-w-0 flex-shrink overflow-hidden">
 						<div class="flex items-center gap-1 sm:gap-2">
-							<!-- Mobile WiFi dot indicator -->
-							<span class="sm:hidden w-2 h-2 rounded-full flex-shrink-0" :class="isOffline ? 'bg-orange-500' : 'bg-green-500'"></span>
 							<h1 class="text-sm sm:text-base font-semibold text-gray-800 truncate flex-shrink tracking-tight">{{ 'POS Next' }}</h1>
 							<span class="hidden sm:inline-flex relative items-center px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[10px] font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full shadow-sm flex-shrink-0">
 								<span class="relative">v{{ appVersion }}</span>
@@ -326,6 +324,9 @@
 					</div>
 
 					<div class="w-px h-4 sm:h-6 bg-gray-200 hidden sm:block"></div>
+
+					<!-- Mobile status dot -->
+					<span class="sm:hidden w-2.5 h-2.5 rounded-full flex-shrink-0" :class="isOffline ? 'bg-orange-500' : 'bg-green-500'"></span>
 
 					<!-- User Menu -->
 					<UserMenu
