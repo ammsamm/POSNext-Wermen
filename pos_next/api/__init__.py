@@ -16,4 +16,6 @@ from . import utilities
 @frappe.whitelist(allow_guest=True)
 def ping():
     """Simple ping endpoint for connectivity checks"""
+    frappe.response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    frappe.response.headers["Pragma"] = "no-cache"
     return "pong"

@@ -233,13 +233,10 @@ class NetworkMonitor {
 				const controller = new AbortController()
 				const timeoutId = setTimeout(() => controller.abort(), CONFIG.PING_TIMEOUT_MS)
 
-				const response = await fetch(CONFIG.PING_URL, {
+				const response = await fetch(`${CONFIG.PING_URL}?_=${Date.now()}`, {
 					method: 'GET',
 					signal: controller.signal,
 					cache: 'no-store',
-					headers: {
-						'Cache-Control': 'no-cache',
-					},
 				})
 
 				clearTimeout(timeoutId)
