@@ -124,7 +124,7 @@
 					<button
 						@click="$emit('sync-click')"
 						:class="[
-							'p-2 sm:p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors relative group touch-manipulation',
+							'p-1.5 sm:p-2.5 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-colors relative group touch-manipulation',
 							isSyncing ? 'animate-pulse' : ''
 						]"
 						:title="isOffline ? __('Offline ({0} pending)', [pendingInvoicesCount]) : __('Online - Click to sync')"
@@ -155,8 +155,8 @@
 						</span>
 					</button>
 
-					<!-- Cache Status Indicator -->
-					<div class="relative">
+					<!-- Cache Status Indicator - Hidden on mobile to save space -->
+					<div class="relative hidden sm:block">
 						<button
 							@click="showCacheTooltip = !showCacheTooltip"
 							@blur="handleBlur"

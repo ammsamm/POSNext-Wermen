@@ -136,7 +136,7 @@ const Avatar = (props) => {
 	const bgClass = props.image ? 'bg-gray-200' : 'bg-gradient-to-br from-blue-500 to-blue-600'
 
 	return h('div', {
-		class: `${sizeClass} rounded-full flex items-center justify-center shadow-md overflow-hidden flex-shrink-0 ${bgClass}`
+		class: `${sizeClass} rounded-full flex items-center justify-center shadow-sm overflow-hidden flex-shrink-0 ${bgClass}`
 	}, [
 		props.image
 			? h('img', { src: props.image, alt: props.name, class: 'w-full h-full object-cover' })
