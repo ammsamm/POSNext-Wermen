@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 import hashlib
 import hmac
@@ -35,8 +36,8 @@ class BrainWiseBranding(Document):
 				if not self.master_key_provided or not self._validate_master_key():
 					changed_fields = ', '.join(protected_fields_changed)
 					frappe.throw(
-						f"Cannot modify protected fields ({changed_fields}) without the Master Key. "
-						"Provide the Master Key to make changes to branding configuration.",
+						_("Cannot modify protected fields ({0}) without the Master Key. "
+						"Provide the Master Key to make changes to branding configuration.").format(changed_fields),
 						frappe.PermissionError
 					)
 
@@ -58,8 +59,8 @@ class BrainWiseBranding(Document):
 		if not self.enabled and not self.is_new():
 			if not self.master_key_provided or not self._validate_master_key():
 				frappe.throw(
-					"Branding cannot be disabled without the Master Key. "
-					"Contact BrainWise support if you need to disable branding.",
+					_("Branding cannot be disabled without the Master Key. "
+					"Contact BrainWise support if you need to disable branding."),
 					frappe.PermissionError
 				)
 
@@ -335,7 +336,7 @@ def verify_master_key(master_key_input):
 	"""
 	# Only System Managers can check
 	if "System Manager" not in frappe.get_roles():
-		frappe.throw("Only System Managers can verify the master key", frappe.PermissionError)
+		frappe.throw(_("Only System Managers can verify the master key"), frappe.PermissionError)
 
 	try:
 		# Parse the master key input
@@ -385,7 +386,7 @@ def generate_new_master_key():
 	WARNING: This should only be used during initial setup!
 	"""
 	if "System Manager" not in frappe.get_roles():
-		frappe.throw("Only System Managers can generate master keys", frappe.PermissionError)
+		frappe.throw(_("Only System Managers can generate master keys"), frappe.PermissionError)
 
 	# Generate new random key and phrase
 	new_key = secrets.token_urlsafe(32)

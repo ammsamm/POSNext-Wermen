@@ -3,7 +3,7 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe import translate
+from frappe import _, translate
 
 
 @frappe.whitelist()
@@ -39,7 +39,7 @@ def get_user_language():
 	"""
 	# Check if user is authenticated
 	if frappe.session.user == "Guest":
-		frappe.throw("Authentication required", frappe.AuthenticationError)
+		frappe.throw(_("Authentication required"), frappe.AuthenticationError)
 
 	# Get user's language preference
 	language = frappe.db.get_value("User", frappe.session.user, "language") or "en"
@@ -114,22 +114,22 @@ def change_user_language(locale):
 	"""
 	# Check if user is authenticated
 	if frappe.session.user == "Guest":
-		frappe.throw("Authentication required", frappe.AuthenticationError)
+		frappe.throw(_("Authentication required"), frappe.AuthenticationError)
 
 	# Verify user is enabled
 	if not frappe.db.get_value("User", frappe.session.user, "enabled"):
-		frappe.throw("User is disabled", frappe.AuthenticationError)
+		frappe.throw(_("User is disabled"), frappe.AuthenticationError)
 
 	# Validate locale parameter
 	if not locale:
-		frappe.throw("Locale parameter is required", frappe.ValidationError)
+		frappe.throw(_("Locale parameter is required"), frappe.ValidationError)
 
 	# Normalize locale to lowercase
 	locale = locale.lower()
 
 	allowed_locales = get_allowed_locales_from_settings()
 	if locale not in allowed_locales:
-		frappe.throw(f"Locale '{locale}' is not supported", frappe.ValidationError)
+		frappe.throw(_("Locale '{0}' is not supported").format(locale), frappe.ValidationError)
 
 	# Update user's language preference
 	try:
@@ -143,4 +143,4 @@ def change_user_language(locale):
 		}
 	except Exception as e:
 		frappe.log_error(f"Failed to change user language: {str(e)}")
-		frappe.throw(f"Failed to change language: {str(e)}", frappe.ValidationError)
+		frappe.throw(_("Failed to change language: {0}").format(str(e)), frappe.ValidationError)
