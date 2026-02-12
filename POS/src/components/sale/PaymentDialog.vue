@@ -1879,25 +1879,26 @@ watch(show, (newVal) => {
 		}
 
 		// Load customer credit and balance if enabled and customer is selected
-		if (props.allowCreditSale && props.customer && props.company) {
+		if (props.allowCreditSale && props.customer && props.company && !props.isOffline) {
 			log.debug("[PaymentDialog] Loading customer credit, balance, and credit limit...")
 			loadingCredit.value = true
 			loadingCreditLimit.value = true
 			customerCreditResource.fetch()
 			customerBalanceResource.fetch()
-			creditLimitResource.fetch() // Fetch fresh credit limit from server
+			creditLimitResource.fetch()
 		} else {
 			log.debug("[PaymentDialog] Not loading credit because:", {
 				allowCreditSale: props.allowCreditSale,
 				hasCustomer: !!props.customer,
 				hasCompany: !!props.company,
+				isOffline: props.isOffline,
 			})
 			// Reset credit limit when conditions not met
 			freshCreditLimit.value = 0
 		}
 
 		// Load wallet info if customer is selected
-		if (props.customer && props.company) {
+		if (props.customer && props.company && !props.isOffline) {
 			log.debug("[PaymentDialog] Loading wallet info...")
 			loadingWallet.value = true
 			walletInfoResource.fetch()
