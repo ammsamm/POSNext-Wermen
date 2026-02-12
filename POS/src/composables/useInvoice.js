@@ -980,8 +980,8 @@ export function useInvoice() {
 		// Reset to null first
 		customer.value = null
 
-		// Only fetch default customer if we have a POS Profile
-		if (!posProfile.value) {
+		// Only fetch default customer if we have a POS Profile and are online
+		if (!posProfile.value || isOffline()) {
 			return
 		}
 
