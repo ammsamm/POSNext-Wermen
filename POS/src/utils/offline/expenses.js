@@ -11,11 +11,15 @@
 import { db, getSetting, setSetting } from "./db"
 import { generateOfflineId } from "./uuid"
 import { isOffline } from "./offlineState"
+import { CoalescingMutex } from "@/utils/mutex"
 import { logger } from "../logger"
 import { call } from "../apiWrapper"
 
 /** @type {import('../logger').Logger} */
 const log = logger.create("OfflineExpenses")
+
+/** Mutex to prevent concurrent expense sync operations */
+const expenseSyncMutex = new CoalescingMutex({ timeout: 60000, name: "ExpenseSync" })
 
 // ==========================================
 // Helpers
@@ -303,6 +307,12 @@ export async function deleteQueuedExpense(queueId) {
  * @returns {Promise<{success: number, failed: number, errors: Array}>}
  */
 export async function syncOfflineExpenses() {
+	if (isOffline()) {
+		log.debug("Cannot sync expenses while offline")
+		return { success: 0, failed: 0, errors: [] }
+	}
+
+	return await expenseSyncMutex.withLock(async () => {
 	const results = { success: 0, failed: 0, errors: [] }
 	const pending = await getPendingExpenses()
 
@@ -363,4 +373,5 @@ export async function syncOfflineExpenses() {
 
 	log.info(`Sync complete: ${results.success} success, ${results.failed} failed`)
 	return results
+	}) // expenseSyncMutex.withLock
 }
