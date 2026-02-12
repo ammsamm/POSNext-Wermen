@@ -1463,34 +1463,15 @@ export const usePOSCartStore = defineStore("posCart", () => {
 			return
 		}
 
-		// Ensure offers are fetched before processing
-		// This is critical for mobile view where InvoiceCart may not be mounted yet
-		// IMPORTANT: This must happen BEFORE hash check, because if offers weren't
-		// fetched on previous runs, we need to re-process even if cart hash matches
-		const wasFetched = offersStore.hasFetched
 		// posProfile.value is the profile name string directly
 		const profileName = posProfile.value
-		await offersStore.ensureOffersFetched(profileName)
-
-		// Check cancellation after fetch
-		if (signal?.aborted) return
-
-		// Generate current cart hash
-		const currentHash = generateCartHash()
-
-		// Skip if cart hasn't changed since last successful processing (unless forced)
-		// Also force re-processing if offers were just fetched for the first time
-		const justFetched = !wasFetched && offersStore.hasFetched
-		if (!force && !justFetched && currentHash === offerProcessingState.value.lastCartHash) {
-			return
-		}
-
-		// Update offer snapshot for eligibility checking
-		syncOfferSnapshot()
 
 		// === OFFLINE MODE ===
-		// When offline, use cached offers and apply discounts client-side
+		// When offline, skip ALL server interactions — use cached offers client-side.
+		// This check MUST come before ensureOffersFetched() which makes API calls.
 		if (offlineState.isOffline) {
+			// Load offers from cache if not already loaded
+			await offersStore.ensureOffersFetched(profileName)
 			applyOffersOffline()
 			offerProcessingState.value.lastCartHash = generateCartHash()
 			offerProcessingState.value.lastProcessedAt = Date.now()
@@ -1498,8 +1479,32 @@ export const usePOSCartStore = defineStore("posCart", () => {
 		}
 
 		// === ONLINE MODE ===
-		// Wrap in try/catch to fall back to offline mode on network errors
+		// Wrap ALL server interactions in try/catch to handle the transitional
+		// window where offlineState hasn't detected offline yet but network is down.
 		try {
+			// Ensure offers are fetched before processing
+			// This is critical for mobile view where InvoiceCart may not be mounted yet
+			// IMPORTANT: This must happen BEFORE hash check, because if offers weren't
+			// fetched on previous runs, we need to re-process even if cart hash matches
+			const wasFetched = offersStore.hasFetched
+			await offersStore.ensureOffersFetched(profileName)
+
+			// Check cancellation after fetch
+			if (signal?.aborted) return
+
+			// Generate current cart hash
+			const currentHash = generateCartHash()
+
+			// Skip if cart hasn't changed since last successful processing (unless forced)
+			// Also force re-processing if offers were just fetched for the first time
+			const justFetched = !wasFetched && offersStore.hasFetched
+			if (!force && !justFetched && currentHash === offerProcessingState.value.lastCartHash) {
+				return
+			}
+
+			// Update offer snapshot for eligibility checking
+			syncOfferSnapshot()
+
 			// posProfile.value is the profile NAME (a string), not an object
 			const currentProfile = {
 				customer: customer.value?.name || customer.value,
