@@ -1548,7 +1548,7 @@ export const useItemSearchStore = defineStore("itemSearch", () => {
 		}
 
 		// Fetch item groups from POS Profile FIRST
-		if (profile) {
+		if (profile && !isOffline()) {
 			try {
 				const data = await call("pos_next.api.pos_profile.get_pos_profile_data", {
 					pos_profile: profile

@@ -23,6 +23,7 @@ import { defineStore } from 'pinia'
 import { ref, onMounted } from 'vue'
 import { call } from '@/utils/apiWrapper'
 import { offlineWorker } from '@/utils/offline/workerClient'
+import { offlineState } from '@/utils/offline/offlineState'
 import { logger } from '@/utils/logger'
 import { usePOSEventsStore } from '@/stores/posEvents'
 
@@ -112,6 +113,7 @@ export const useStockStore = defineStore('stock', () => {
 	// This is the fallback when realtime Socket.IO is down
 	const refresh = async (itemCodes, targetWarehouse) => {
 		if (!targetWarehouse && !warehouse.value) return
+		if (offlineState.isOffline) return
 
 		refreshing.value = true
 

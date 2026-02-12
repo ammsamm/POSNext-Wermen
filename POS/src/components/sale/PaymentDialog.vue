@@ -1893,8 +1893,13 @@ watch(show, (newVal) => {
 				hasCompany: !!props.company,
 				isOffline: props.isOffline,
 			})
-			// Reset credit limit when conditions not met
-			freshCreditLimit.value = 0
+			// When offline, use cached credit_limit from customer data
+			if (props.isOffline && props.customer) {
+				const cachedLimit = props.customer.credit_limit || props.customer?.credit_limit || 0
+				freshCreditLimit.value = cachedLimit
+			} else {
+				freshCreditLimit.value = 0
+			}
 		}
 
 		// Load wallet info if customer is selected
