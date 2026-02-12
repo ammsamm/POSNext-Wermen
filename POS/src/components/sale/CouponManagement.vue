@@ -2,7 +2,10 @@
 	<!-- Split Layout matching PromotionManagement -->
 	<div class="flex-1 flex overflow-hidden">
 		<!-- LEFT SIDE: Coupon List & Navigation -->
-		<div class="w-80 flex-shrink-0 border-e bg-gray-50 flex flex-col">
+		<div :class="[
+			'w-full sm:w-80 flex-shrink-0 border-e bg-gray-50 flex flex-col',
+			(selectedCoupon || isCreating) ? 'hidden sm:flex' : 'flex'
+		]">
 			<!-- Search & Filter -->
 			<div class="p-4 bg-white border-b flex flex-col gap-3">
 				<FormControl
@@ -167,12 +170,20 @@
 			</div>
 
 			<!-- Create/Edit Form -->
-			<div v-else class="p-6">
+			<div v-else class="p-3 sm:p-6">
 				<div class="max-w-5xl mx-auto">
+					<!-- Mobile Back Button -->
+					<button
+						class="sm:hidden flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-3 min-h-[44px] touch-manipulation"
+						@click="selectedCoupon = null; isCreating = false"
+					>
+						<FeatherIcon name="arrow-left" class="w-4 h-4 rtl:rotate-180" />
+						{{ __('Back to list') }}
+					</button>
 					<!-- Form Header -->
-					<div class="flex items-center justify-between mb-6 pb-4 border-b">
-						<div>
-							<div class="flex items-center gap-3">
+					<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 pb-4 border-b gap-3">
+						<div class="min-w-0 flex-1">
+							<div class="flex items-center gap-2 sm:gap-3 flex-wrap">
 								<h3 class="text-xl font-semibold text-gray-900">
 									{{ isCreating ? __('Create New Coupon') : __('Coupon Details') }}
 								</h3>
@@ -189,7 +200,7 @@
 								{{ isCreating ? __('Fill in the details to create a new coupon') : __('View and update coupon information') }}
 							</p>
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex items-center gap-2 flex-wrap">
 							<Button
 								v-if="!isCreating && permissions.write"
 								@click="handleToggle"

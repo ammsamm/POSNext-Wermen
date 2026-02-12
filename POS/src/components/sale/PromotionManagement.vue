@@ -7,10 +7,10 @@
 			@click.self="handleClose"
 		>
 			<!-- Main Container -->
-			<div class="fixed inset-0 flex items-center justify-center p-4">
-				<div class="w-full h-full max-w-[95vw] max-h-[95vh] bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col">
+			<div class="fixed inset-0 flex items-end sm:items-center justify-center sm:p-4">
+				<div class="w-full h-full sm:max-w-[95vw] sm:max-h-[95vh] bg-white sm:rounded-lg shadow-2xl overflow-hidden flex flex-col">
 					<!-- Header -->
-					<div class="flex items-center justify-between px-6 py-4 border-b">
+					<div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b">
 						<div class="flex items-center gap-3">
 							<FeatherIcon name="tag" class="w-5 h-5 text-gray-700" />
 							<div>
@@ -32,12 +32,12 @@
 					</div>
 
 					<!-- Tabs -->
-					<div class="border-b bg-white px-6">
-						<div class="flex gap-1">
+					<div class="border-b bg-white px-3 sm:px-6 overflow-x-auto">
+						<div class="flex gap-1 flex-nowrap">
 							<button
 								@click="activeTab = 'promotions'"
 								:class="[
-									'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+									'px-3 sm:px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap min-h-[44px]',
 									activeTab === 'promotions'
 										? 'text-blue-600 border-blue-600'
 										: 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
@@ -51,7 +51,7 @@
 							<button
 								@click="activeTab = 'coupons'"
 								:class="[
-									'px-4 py-3 text-sm font-medium border-b-2 transition-colors',
+									'px-3 sm:px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap min-h-[44px]',
 									activeTab === 'coupons'
 										? 'text-blue-600 border-blue-600'
 										: 'text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300'
@@ -70,7 +70,10 @@
 						<!-- PROMOTIONS TAB -->
 						<template v-if="activeTab === 'promotions'">
 						<!-- LEFT SIDE: Promotion List & Navigation -->
-						<div class="w-80 flex-shrink-0 border-e bg-gray-50 flex flex-col">
+						<div :class="[
+							'w-full sm:w-80 flex-shrink-0 border-e bg-gray-50 flex flex-col',
+							(selectedPromotion || isCreating) ? 'hidden sm:flex' : 'flex'
+						]">
 							<!-- Search & Filter -->
 							<div class="p-4 bg-white border-b flex flex-col gap-3">
 								<FormControl
@@ -240,12 +243,20 @@
 							</div>
 
 							<!-- Create/Edit Form -->
-							<div v-else class="p-6">
+							<div v-else class="p-3 sm:p-6">
 								<div class="max-w-5xl mx-auto">
+									<!-- Mobile Back Button -->
+									<button
+										class="sm:hidden flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 mb-3 min-h-[44px] touch-manipulation"
+										@click="selectedPromotion = null; isCreating = false"
+									>
+										<FeatherIcon name="arrow-left" class="w-4 h-4 rtl:rotate-180" />
+										{{ __('Back to list') }}
+									</button>
 									<!-- Form Header -->
-									<div class="flex items-center justify-between mb-6 pb-4 border-b">
-										<div>
-											<div class="flex items-center gap-3">
+									<div class="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b">
+										<div class="min-w-0 flex-1">
+											<div class="flex items-center gap-2 sm:gap-3 flex-wrap">
 												<h3 class="text-xl font-semibold text-gray-900">
 													{{ isCreating ? __('Create New Promotion') : __('Edit Promotion') }}
 												</h3>

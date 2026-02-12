@@ -19,7 +19,7 @@
 				<!-- Mobile: Hamburger Menu -->
 				<button
 					class="lg:hidden w-10 h-10 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors touch-manipulation"
-					@click="showMobileMenu = !showMobileMenu"
+					@click.stop="showMobileMenu = !showMobileMenu"
 					:aria-label="__('Menu')"
 					:title="__('Menu')"
 				>
@@ -33,15 +33,9 @@
 				<Transition name="menu-slide">
 					<div
 						v-if="showMobileMenu"
-						class="absolute top-full start-0 mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250]"
+						@click.stop
+						class="absolute top-full start-2 mt-2 w-60 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-[250]"
 					>
-						<button
-							@click="handleMobileMenuClick('dashboard')"
-							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-blue-50 flex items-center gap-3 transition-colors"
-						>
-							<FeatherIcon name="layout" class="w-5 h-5 text-blue-600" />
-							<span>{{ __('Dashboard') }}</span>
-						</button>
 						<button
 							@click="handleMobileMenuClick('promotions')"
 							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-green-50 flex items-center gap-3 transition-colors"
@@ -55,13 +49,6 @@
 						>
 							<FeatherIcon name="package" class="w-5 h-5 text-purple-600" />
 							<span>{{ __('Products') }}</span>
-						</button>
-						<button
-							@click="handleMobileMenuClick('reports')"
-							class="w-full text-start px-4 py-2.5 min-h-[44px] text-sm text-gray-700 hover:bg-orange-50 flex items-center gap-3 transition-colors"
-						>
-							<FeatherIcon name="bar-chart-2" class="w-5 h-5 text-orange-600" />
-							<span>{{ __('Reports') }}</span>
 						</button>
 						<button
 							@click="handleMobileMenuClick('invoices')"
