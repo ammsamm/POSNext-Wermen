@@ -2,6 +2,7 @@ import { createResource } from "frappe-ui"
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
 import { useBootstrapStore } from "./bootstrap"
+import { offlineState } from "@/utils/offline/offlineState"
 
 export const usePOSSettingsStore = defineStore("posSettings", () => {
 	// State
@@ -354,6 +355,9 @@ export const usePOSSettingsStore = defineStore("posSettings", () => {
 	 * @returns {boolean} - True if stock validation should prevent negative stock
 	 */
 	function shouldEnforceStockValidation() {
+		// Skip stock validation when offline — cached stock is stale,
+		// server will validate when the invoice syncs
+		if (offlineState.isOffline) return false
 		return isEnabled.value && !Boolean(settings.value.allow_negative_stock)
 	}
 

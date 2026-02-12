@@ -1495,34 +1495,40 @@ export const usePOSCartStore = defineStore("posCart", () => {
 		}
 
 		// === ONLINE MODE ===
-		// Get current profile from posProfile
-		const currentProfile = {
-			customer: customer.value?.name || customer.value,
-			company: posProfile.value.company,
-			selling_price_list: posProfile.value.selling_price_list,
-			currency: posProfile.value.currency,
+		// Wrap in try/catch to fall back to offline mode on network errors
+		try {
+			// posProfile.value is the profile NAME (a string), not an object
+			const currentProfile = {
+				customer: customer.value?.name || customer.value,
+			}
+
+			// Validate and auto-remove invalid offers (if any are applied)
+			if (appliedOffers.value.length > 0) {
+				await reapplyOffer(currentProfile, signal)
+			}
+
+			// Check cancellation before auto-apply
+			if (signal?.aborted) return
+
+			// Check again if stale after reapply
+			if (generation > 0 && generation < cartGeneration) {
+				return
+			}
+
+			// Auto-apply eligible offers (always check for new eligible offers)
+			await autoApplyEligibleOffers(currentProfile, signal)
+
+			// Update last processed hash on success
+			offerProcessingState.value.lastCartHash = generateCartHash()
+			offerProcessingState.value.lastProcessedAt = Date.now()
+			offerProcessingState.value.retryCount = 0
+		} catch (error) {
+			// Network error or server unreachable — fall back to offline offer processing
+			console.warn("Online offer processing failed, falling back to offline:", error.message)
+			applyOffersOffline()
+			offerProcessingState.value.lastCartHash = generateCartHash()
+			offerProcessingState.value.lastProcessedAt = Date.now()
 		}
-
-		// Validate and auto-remove invalid offers (if any are applied)
-		if (appliedOffers.value.length > 0) {
-			await reapplyOffer(currentProfile, signal)
-		}
-
-		// Check cancellation before auto-apply
-		if (signal?.aborted) return
-
-		// Check again if stale after reapply
-		if (generation > 0 && generation < cartGeneration) {
-			return
-		}
-
-		// Auto-apply eligible offers (always check for new eligible offers)
-		await autoApplyEligibleOffers(currentProfile, signal)
-
-		// Update last processed hash on success
-		offerProcessingState.value.lastCartHash = generateCartHash()
-		offerProcessingState.value.lastProcessedAt = Date.now()
-		offerProcessingState.value.retryCount = 0
 	}
 
 	/**
@@ -1547,8 +1553,8 @@ export const usePOSCartStore = defineStore("posCart", () => {
 					offerProcessingState.value.error = error.message
 					offerProcessingState.value.retryCount++
 
-					// Auto-retry on failure (max 3 times)
-					if (offerProcessingState.value.retryCount < 3) {
+					// Auto-retry on failure (max 3 times), but not when offline
+					if (offerProcessingState.value.retryCount < 3 && !offlineState.isOffline) {
 						setTimeout(() => {
 							triggerOfferProcessing(true)
 						}, 500 * offerProcessingState.value.retryCount)

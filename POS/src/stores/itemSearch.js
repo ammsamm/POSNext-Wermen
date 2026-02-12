@@ -389,6 +389,10 @@ export const useItemSearchStore = defineStore("itemSearch", () => {
 	const searchByBarcodeResource = createResource({
 		url: "pos_next.api.items.search_by_barcode",
 		auto: false,
+		onError(error) {
+			// Suppress default error handling; caller falls back to cached items
+			log.debug("Barcode API error (handled by caller):", error.message)
+		},
 	})
 
 	// Getters
@@ -1386,6 +1390,13 @@ export const useItemSearchStore = defineStore("itemSearch", () => {
 	}
 
 	async function searchByBarcode(barcode) {
+		// When offline, search cached items by barcode directly
+		if (isOffline()) {
+			log.debug("Offline barcode search", { barcode })
+			const items = await offlineWorker.searchCachedItems(barcode, 1)
+			return items?.[0] || null
+		}
+
 		try {
 			if (!posProfile.value) {
 				log.error("No POS Profile set in store")

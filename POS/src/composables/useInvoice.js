@@ -95,6 +95,10 @@ export function useInvoice() {
 			return params
 		},
 		auto: false,
+		onError(error) {
+			// Suppress default error handling; callers handle errors via try/catch
+			console.debug("applyOffersResource error (handled by caller):", error.message)
+		},
 	})
 
 	const getItemDetailsResource = createResource({
