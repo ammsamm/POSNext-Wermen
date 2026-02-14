@@ -275,17 +275,40 @@ export const clearCachedData = async (options = {}) => {
 			await db.open()
 		}
 
+		// Filter to only tables that exist in the current DB
+		const existingTableNames = new Set(db.tables.map(t => t.name))
+		const validTables = tablesToClear.filter(name => existingTableNames.has(name))
+
+		if (validTables.length === 0) {
+			log.warn("No tables to clear")
+			return { success: true, cleared: [] }
+		}
+
 		// Clear all tables in a single atomic transaction
-		const tableRefs = tablesToClear.map(name => db.table(name))
+		const tableRefs = validTables.map(name => db.table(name))
 		await db.transaction("rw", tableRefs, async () => {
-			await Promise.all(tablesToClear.map(name => db.table(name).clear()))
+			await Promise.all(validTables.map(name => db.table(name).clear()))
 		})
 
-		log.info("Cached data cleared:", tablesToClear)
-		return { success: true, cleared: tablesToClear }
+		log.info("Cached data cleared:", validTables)
+		return { success: true, cleared: validTables }
 	} catch (error) {
 		log.error("Error clearing cached data:", error)
-		return { success: false, error: error.message }
+
+		// Fallback: clear tables individually if transaction fails
+		const cleared = []
+		for (const name of tablesToClear) {
+			try {
+				if (db.tables.some(t => t.name === name)) {
+					await db.table(name).clear()
+					cleared.push(name)
+				}
+			} catch (e) {
+				log.warn(`Failed to clear table ${name}:`, e.message)
+			}
+		}
+		log.info("Fallback clearing completed:", cleared)
+		return { success: cleared.length > 0, cleared }
 	}
 }
 
@@ -377,13 +400,20 @@ export const clearBrowserCache = () => {
 		sessionStorage: 0,
 	}
 
+	// Keys that must survive a cache clear (DB versioning needs these on reload)
+	const PROTECTED_KEYS = new Set([
+		"pos_next_schema_hash",
+		"pos_next_schema_version",
+	])
+
 	try {
 		// Clear POS-specific localStorage items only
 		// IMPORTANT: Do NOT clear frappe_* keys — they contain session/auth data
+		// IMPORTANT: Do NOT clear schema tracking keys — Dexie needs them for version detection
 		const keysToRemove = []
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i)
-			if (key?.startsWith('pos_next_')) {
+			if (key?.startsWith('pos_next_') && !PROTECTED_KEYS.has(key)) {
 				keysToRemove.push(key)
 			}
 		}
