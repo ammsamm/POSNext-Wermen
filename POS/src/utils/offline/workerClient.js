@@ -545,6 +545,53 @@ class OfflineWorkerClient {
 		return this.sendMessage("CLEAR_OFFERS_CACHE", { posProfile })
 	}
 
+	/**
+	 * Graceful shutdown: sends SHUTDOWN to worker, waits for ack, then terminates.
+	 * Use this instead of terminate() for coordinated cache clearing.
+	 * @param {number} timeoutMs - Max time to wait for worker ack (default 3000ms)
+	 */
+	async shutdown(timeoutMs = 3000) {
+		// Stop health check first
+		if (this.healthCheckInterval) {
+			clearInterval(this.healthCheckInterval)
+			this.healthCheckInterval = null
+		}
+		this.healthCheckActive = false
+
+		if (!this.worker) {
+			this.ready = false
+			return
+		}
+
+		// Try graceful shutdown with timeout
+		try {
+			await Promise.race([
+				this.sendMessage("SHUTDOWN"),
+				new Promise((_, reject) =>
+					setTimeout(() => reject(new Error("Shutdown timeout")), timeoutMs)
+				),
+			])
+		} catch (e) {
+			// Timeout or error — fall through to hard terminate
+			log.warn("Graceful shutdown failed, forcing terminate:", e.message)
+		}
+
+		// Reject any remaining pending messages
+		this.rejectAllPending("Worker shutting down")
+
+		// Hard terminate
+		if (this.worker) {
+			this.worker.terminate()
+			this.worker = null
+			this.ready = false
+		}
+
+		// Reset state
+		this.workerCrashed = false
+		this.initAttempts = 0
+		this.retryAttempts.clear()
+	}
+
 	terminate() {
 		// Stop health check
 		if (this.healthCheckInterval) {

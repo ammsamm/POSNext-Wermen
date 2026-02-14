@@ -2236,28 +2236,22 @@ async function confirmClearCache() {
 	try {
 		log.info("Clearing cached data...");
 
-		// 1. Stop the offline worker first to prevent it from accessing IndexedDB during clear
-		offlineWorker.terminate();
+		// 1. Graceful worker shutdown (sends SHUTDOWN, waits for DB close, then terminates)
+		await offlineWorker.shutdown(3000);
 
-		// 2. Clear IndexedDB cache (preserves invoices, drafts, and settings by default)
-		const { clearCachedData } = await import("@/utils/offline/db.js");
-		await clearCachedData({
+		// 2. Brief delay for worker DB connection release
+		await new Promise((r) => setTimeout(r, 300));
+
+		// 3. Clear all cache layers (Cache Storage, Service Workers, IndexedDB, translation memory, browser storage)
+		const { clearAllCaches } = await import("@/utils/offline/db.js");
+		await clearAllCaches({
 			preserveInvoices: true,
 			preserveDrafts: true,
 			preserveSettings: true,
+			preserveExpenseQueue: true,
 		});
 
 		log.success("Cache cleared, reloading page...");
-
-		// 3. Unregister service workers to prevent stale interception on reload
-		try {
-			if (navigator.serviceWorker) {
-				const regs = await navigator.serviceWorker.getRegistrations();
-				await Promise.all(regs.map(r => r.unregister()));
-			}
-		} catch (e) {
-			// Ignore SW errors — reload will handle it
-		}
 
 		// 4. Full page reload to re-initialize everything cleanly
 		window.location.reload();

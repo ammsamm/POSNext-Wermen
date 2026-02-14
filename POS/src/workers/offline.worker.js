@@ -60,6 +60,9 @@ let circuitBreakerFailures = 0
 /** @type {boolean} Circuit breaker state */
 let circuitBreakerOpen = false
 
+/** @type {number|null} Ping interval ID (stored for graceful shutdown) */
+let pingIntervalId = null
+
 // ============================================================================
 // DATABASE CONNECTION MANAGEMENT
 // ============================================================================
@@ -1400,6 +1403,46 @@ function getStockSyncStatus() {
 	}
 }
 
+// ============================================================================
+// GRACEFUL SHUTDOWN
+// ============================================================================
+
+/**
+ * Graceful shutdown: stops all intervals, clears caches, closes DB.
+ * Called via SHUTDOWN message from main thread before cache clearing.
+ * @returns {Promise<{success: boolean}>}
+ */
+async function shutdown() {
+	log.info("Shutting down worker...")
+
+	// 1. Stop ping interval
+	if (pingIntervalId) {
+		clearInterval(pingIntervalId)
+		pingIntervalId = null
+	}
+
+	// 2. Stop periodic stock sync
+	stopPeriodicStockSync()
+
+	// 3. Clear query cache
+	queryCache.clear()
+
+	// 4. Close DB connection
+	if (db) {
+		try {
+			db.close()
+		} catch (e) {
+			log.warn("Error closing DB during shutdown:", e)
+		}
+		db = null
+		dbInitialized = false
+		dbInitPromise = null
+	}
+
+	log.success("Worker shutdown complete")
+	return { success: true }
+}
+
 // Message handler
 self.onmessage = async (event) => {
 	const { type, payload, id } = event.data
@@ -1536,6 +1579,10 @@ self.onmessage = async (event) => {
 				result = await clearOffersCache(payload.posProfile)
 				break
 
+			case "SHUTDOWN":
+				result = await shutdown()
+				break
+
 			default:
 				throw new Error(`Unknown message type: ${type}`)
 		}
@@ -1565,7 +1612,7 @@ async function initialize() {
 		log.info("Database ready")
 
 		// Start periodic server ping (every 30 seconds)
-		setInterval(async () => {
+		pingIntervalId = setInterval(async () => {
 			const isOnline = await pingServer()
 			self.postMessage({
 				type: "SERVER_STATUS_CHANGE",

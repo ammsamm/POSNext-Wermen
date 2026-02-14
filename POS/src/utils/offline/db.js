@@ -230,8 +230,10 @@ export const setSetting = async (key, value) => {
 }
 
 /**
- * Clear all cached data (items, customers, stock, etc.)
- * Preserves critical data like invoices, drafts, and settings
+ * Clear all cached data (items, customers, stock, etc.) in a single transaction.
+ * Preserves critical data like invoices, drafts, and settings.
+ * Uses Dexie transaction for atomicity — all-or-nothing clearing.
+ *
  * @param {Object} options - Options for clearing
  * @param {boolean} options.preserveInvoices - Keep invoice queue (default: true)
  * @param {boolean} options.preserveDrafts - Keep drafts (default: true)
@@ -247,62 +249,89 @@ export const clearCachedData = async (options = {}) => {
 		preserveExpenseQueue = true,
 	} = options
 
-	const results = {
-		items: 0,
-		customers: 0,
-		stock: 0,
-		item_prices: 0,
-		payment_methods: 0,
-		translations: null,
-		invoices: 0,
-		payments: 0,
-		drafts: 0,
-		settings: 0,
-		expense_categories: 0,
-		expenses_cache: 0,
-		expense_queue: 0,
+	// Build list of tables to clear
+	const tablesToClear = [
+		"items", "customers", "stock", "item_prices",
+		"payment_methods", "translations", "expense_categories",
+		"expenses_cache", "offers", "invoice_history", "unpaid_invoices",
+	]
+
+	if (!preserveInvoices) {
+		tablesToClear.push("invoice_queue", "payment_queue")
+	}
+	if (!preserveDrafts) {
+		tablesToClear.push("drafts")
+	}
+	if (!preserveSettings) {
+		tablesToClear.push("settings")
+	}
+	if (!preserveExpenseQueue) {
+		tablesToClear.push("expense_queue")
 	}
 
 	try {
-		// Always clear these cache tables
-		results.items = await db.items.clear()
-		results.customers = await db.customers.clear()
-		results.stock = await db.stock.clear()
-		results.item_prices = await db.item_prices.clear()
-		results.payment_methods = await db.payment_methods.clear()
-		// Invalidate translations by setting timestamp to 0 (forces re-fetch on next load)
-		// We don't clear them to avoid breaking the current session's __() function
-		await db.translations.toCollection().modify({ timestamp: 0 })
-		results.translations = "invalidated"
-		results.expense_categories = await db.expense_categories.clear()
-		results.expenses_cache = await db.expenses_cache.clear()
-
-		// Conditionally clear expense queue (preserve by default like invoice_queue)
-		if (!preserveExpenseQueue) {
-			results.expense_queue = await db.expense_queue.clear()
+		// Ensure DB is open
+		if (!db.isOpen()) {
+			await db.open()
 		}
 
-		// Conditionally clear invoice and payment queues
-		if (!preserveInvoices) {
-			results.invoices = await db.invoice_queue.clear()
-			results.payments = await db.payment_queue.clear()
-		}
+		// Clear all tables in a single atomic transaction
+		const tableRefs = tablesToClear.map(name => db.table(name))
+		await db.transaction("rw", tableRefs, async () => {
+			await Promise.all(tablesToClear.map(name => db.table(name).clear()))
+		})
 
-		// Conditionally clear drafts
-		if (!preserveDrafts) {
-			results.drafts = await db.drafts.clear()
-		}
-
-		// Conditionally clear settings
-		if (!preserveSettings) {
-			results.settings = await db.settings.clear()
-		}
-
-		log.info("Cached data cleared:", results)
-		return { success: true, cleared: results }
+		log.info("Cached data cleared:", tablesToClear)
+		return { success: true, cleared: tablesToClear }
 	} catch (error) {
 		log.error("Error clearing cached data:", error)
-		return { success: false, error: error.message, cleared: results }
+		return { success: false, error: error.message }
+	}
+}
+
+/**
+ * Coordinated cache clearing across all layers.
+ * Call this from the main thread AFTER the worker has been shut down.
+ *
+ * Order: Cache Storage → Service Workers → IndexedDB → Translation memory → Browser storage
+ *
+ * @param {Object} options - Options passed to clearCachedData
+ * @returns {Promise<{success: boolean}>}
+ */
+export const clearAllCaches = async (options = {}) => {
+	try {
+		// 1. Clear Cache Storage (Workbox caches)
+		if ("caches" in self) {
+			const cacheNames = await caches.keys()
+			await Promise.all(cacheNames.map(name => caches.delete(name)))
+			log.info(`Cleared ${cacheNames.length} Cache Storage entries`)
+		}
+
+		// 2. Unregister service workers
+		if ("serviceWorker" in navigator) {
+			const regs = await navigator.serviceWorker.getRegistrations()
+			await Promise.all(regs.map(r => r.unregister()))
+			log.info(`Unregistered ${regs.length} service workers`)
+		}
+
+		// 3. Clear IndexedDB in a single transaction
+		await clearCachedData(options)
+
+		// 4. Clear translation memory cache
+		const { translationCache } = await import("./translationCache.js")
+		await translationCache.clear()
+		if (typeof window !== "undefined") {
+			window.translatedMessages = {}
+		}
+		log.info("Translation memory cleared")
+
+		// 5. Clear POS-specific browser storage
+		clearBrowserCache()
+
+		return { success: true }
+	} catch (error) {
+		log.error("Error in clearAllCaches:", error)
+		throw error
 	}
 }
 

@@ -11,8 +11,9 @@
 				<!-- Content Card -->
 				<div class="relative z-10">
 					<Transition name="card" mode="out-in">
+						<!-- Confirmation State -->
 						<div
-							v-if="!isClearing"
+							v-if="!isClearing && !hasTimedOut"
 							key="confirm"
 							class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 transform"
 						>
@@ -62,7 +63,7 @@
 
 						<!-- Clearing Animation -->
 						<div
-							v-else
+							v-else-if="isClearing && !hasTimedOut"
 							key="clearing"
 							class="bg-white rounded-2xl shadow-2xl p-12 max-w-md mx-4 transform"
 						>
@@ -100,6 +101,46 @@
 								</div>
 							</div>
 						</div>
+
+						<!-- Timeout Error State -->
+						<div
+							v-else-if="hasTimedOut"
+							key="timeout"
+							class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 transform"
+						>
+							<div class="flex flex-col items-center">
+								<!-- Error Icon -->
+								<div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mb-6">
+									<svg
+										class="w-10 h-10 text-amber-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+										/>
+									</svg>
+								</div>
+
+								<h3 class="text-xl font-bold text-gray-900 mb-2">
+									{{ __('Cache Clear Stalled') }}
+								</h3>
+								<p class="text-gray-500 text-center mb-6">
+									{{ __('The operation is taking too long. Please reload the page to complete the process.') }}
+								</p>
+
+								<button
+									@click="forceReload"
+									class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all active:scale-95 shadow-lg shadow-blue-500/30"
+								>
+									{{ __('Reload Page') }}
+								</button>
+							</div>
+						</div>
 					</Transition>
 				</div>
 			</div>
@@ -108,9 +149,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onBeforeUnmount } from 'vue'
 
-defineProps({
+const TIMEOUT_MS = 15000
+
+const props = defineProps({
 	show: {
 		type: Boolean,
 		default: false
@@ -120,16 +163,45 @@ defineProps({
 const emit = defineEmits(['cancel', 'confirm'])
 
 const isClearing = ref(false)
+const hasTimedOut = ref(false)
+let timeoutTimer = null
 
 function handleConfirm() {
 	isClearing.value = true
+	// Start safety timeout
+	timeoutTimer = setTimeout(() => {
+		hasTimedOut.value = true
+	}, TIMEOUT_MS)
 	emit('confirm')
+}
+
+function forceReload() {
+	window.location.reload()
 }
 
 // Reset state when overlay is closed
 function reset() {
 	isClearing.value = false
+	hasTimedOut.value = false
+	if (timeoutTimer) {
+		clearTimeout(timeoutTimer)
+		timeoutTimer = null
+	}
 }
+
+// Clean up timer if overlay is hidden externally
+watch(() => props.show, (newVal) => {
+	if (!newVal) {
+		reset()
+	}
+})
+
+onBeforeUnmount(() => {
+	if (timeoutTimer) {
+		clearTimeout(timeoutTimer)
+		timeoutTimer = null
+	}
+})
 
 // Expose reset method to parent
 defineExpose({ reset })
