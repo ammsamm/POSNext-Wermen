@@ -1097,7 +1097,7 @@ TRANSLATIONS = {
     "Return Reason": "سبب الإرجاع",
     'Settings saved. Tax mode is now "inclusive". Cart will be recalculated.': 'تم حفظ الإعدادات. وضع الضريبة الآن "شامل". سيتم إعادة حساب السلة.',
     'Settings saved. Tax mode is now "exclusive". Cart will be recalculated.': 'تم حفظ الإعدادات. وضع الضريبة الآن "غير شامل". سيتم إعادة حساب السلة.',
-    "This will clear all cached items, customers, and stock data. Invoices and drafts will be preserved.": "سيتم مسح جميع الأصناف والعملاء وبيانات المخزون المخزنة مؤقتاً. سيتم الاحتفاظ بالفواتير والمسودات.",
+    "This will clear all cached items, customers, stock data, and translations. Invoices and drafts will be preserved.": "سيتم مسح جميع الأصناف والعملاء وبيانات المخزون والترجمات المخزنة مؤقتاً. سيتم الاحتفاظ بالفواتير والمسودات.",
     "Clear All Data": "مسح جميع البيانات",
     "Clearing...": "جاري المسح...",
     "Confirm Clear Cache": "تأكيد مسح الذاكرة المؤقتة",

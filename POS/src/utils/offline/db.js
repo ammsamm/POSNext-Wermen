@@ -253,6 +253,7 @@ export const clearCachedData = async (options = {}) => {
 		stock: 0,
 		item_prices: 0,
 		payment_methods: 0,
+		translations: 0,
 		invoices: 0,
 		payments: 0,
 		drafts: 0,
@@ -269,6 +270,7 @@ export const clearCachedData = async (options = {}) => {
 		results.stock = await db.stock.clear()
 		results.item_prices = await db.item_prices.clear()
 		results.payment_methods = await db.payment_methods.clear()
+		results.translations = await db.translations.clear()
 		results.expense_categories = await db.expense_categories.clear()
 		results.expenses_cache = await db.expenses_cache.clear()
 

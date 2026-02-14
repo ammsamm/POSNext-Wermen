@@ -40,7 +40,7 @@
 								{{ __('Clear Cache?') }}
 							</h3>
 							<p class="text-gray-600 text-center mb-8 leading-relaxed">
-								{{ __('This will clear all cached items, customers, and stock data. Invoices and drafts will be preserved.') }}
+								{{ __('This will clear all cached items, customers, stock data, and translations. Invoices and drafts will be preserved.') }}
 							</p>
 
 							<!-- Buttons -->
