@@ -57,7 +57,7 @@
 				</span>
 				<!-- Paid By -->
 				<span v-if="expense.paid_by" class="text-xs text-gray-500">
-					{{ expense.paid_by }}
+					{{ __(expense.paid_by) }}
 				</span>
 			</div>
 

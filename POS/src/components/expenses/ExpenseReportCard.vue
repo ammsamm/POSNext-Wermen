@@ -21,7 +21,7 @@
 				</div>
 				<div class="text-end flex-shrink-0">
 					<div v-if="report.paid_by" class="text-xs text-gray-500">
-						{{ report.paid_by }}
+						{{ __(report.paid_by) }}
 					</div>
 					<div class="text-xs text-gray-400 mt-1">
 						{{ formatDate(report.creation) }}
