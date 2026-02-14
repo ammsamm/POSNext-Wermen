@@ -2234,37 +2234,16 @@ function handleClearCache() {
 
 async function confirmClearCache() {
 	try {
-		log.info("Clearing cached data...");
+		// Clear translation cache so fresh translations load on reload
+		const { translationCache } = await import("@/utils/offline/translationCache.js");
+		await translationCache.clear();
 
-		// 1. Graceful worker shutdown (sends SHUTDOWN, waits for DB close, then terminates)
-		await offlineWorker.shutdown(3000);
-
-		// 2. Brief delay for worker DB connection release
-		await new Promise((r) => setTimeout(r, 300));
-
-		// 3. Clear all cache layers (Cache Storage, Service Workers, IndexedDB, translation memory, browser storage)
-		const { clearAllCaches } = await import("@/utils/offline/db.js");
-		await clearAllCaches({
-			preserveInvoices: true,
-			preserveDrafts: true,
-			preserveSettings: true,
-			preserveExpenseQueue: true,
-		});
-
-		log.success("Cache cleared, reloading page...");
-
-		// 4. Full page reload to re-initialize everything cleanly
+		// Reload picks up fresh translations from server
 		window.location.reload();
 	} catch (error) {
 		log.error("Error clearing cache:", error);
-
-		// Close overlay on error
-		showClearCacheDialog.value = false;
-		if (clearCacheOverlayRef.value) {
-			clearCacheOverlayRef.value.reset();
-		}
-
-		showError(__("Failed to clear cache. Please try again."));
+		// Even if clear fails, reload should still work
+		window.location.reload();
 	}
 }
 
