@@ -2234,53 +2234,23 @@ function handleClearCache() {
 
 async function confirmClearCache() {
 	try {
-		// Keep overlay open to show clearing animation
 		log.info("Clearing cached data...");
 
-		// Import the clear functions from db.js
-		const { clearCachedData, clearBrowserCache } = await import("@/utils/offline/db.js");
+		// Import the clear function from db.js
+		const { clearCachedData } = await import("@/utils/offline/db.js");
 
 		// Clear IndexedDB cache (preserves invoices, drafts, and settings by default)
-		const dbResult = await clearCachedData({
+		await clearCachedData({
 			preserveInvoices: true,
 			preserveDrafts: true,
 			preserveSettings: true,
 		});
 
-		// Clear browser localStorage and sessionStorage
-		const browserResult = clearBrowserCache();
+		log.success("Cache cleared, reloading page...");
 
-		if (dbResult.success && browserResult.success) {
-			log.success("Cache cleared successfully", {
-				db: dbResult.cleared,
-				browser: browserResult.cleared,
-			});
-
-			// Invalidate item store cache
-			itemStore.invalidateCache();
-
-			// Reload items to fetch fresh data
-			if (itemsSelectorRef.value) {
-				await itemsSelectorRef.value.loadItems();
-			}
-
-			// Refresh stock
-			await stockStore.refresh(null, shiftStore.profileWarehouse);
-
-			// Update cache stats
-			const stats = await offlineWorker.getCacheStats();
-			itemStore.cacheStats = stats;
-
-			// Close overlay and reset state
-			showClearCacheDialog.value = false;
-			if (clearCacheOverlayRef.value) {
-				clearCacheOverlayRef.value.reset();
-			}
-
-			showSuccess(__("All cached data has been cleared successfully"));
-		} else {
-			throw new Error("Failed to clear cache completely");
-		}
+		// Force a full page reload to cleanly re-initialize everything
+		// (service worker, translations, items, stock, etc.)
+		window.location.reload();
 	} catch (error) {
 		log.error("Error clearing cache:", error);
 
