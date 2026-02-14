@@ -2248,8 +2248,13 @@ async function confirmClearCache() {
 
 		log.success("Cache cleared, reloading page...");
 
+		// Unregister service workers to prevent stale interception on reload
+		if (navigator.serviceWorker) {
+			const regs = await navigator.serviceWorker.getRegistrations();
+			await Promise.all(regs.map(r => r.unregister()));
+		}
+
 		// Force a full page reload to cleanly re-initialize everything
-		// (service worker, translations, items, stock, etc.)
 		window.location.reload();
 	} catch (error) {
 		log.error("Error clearing cache:", error);
