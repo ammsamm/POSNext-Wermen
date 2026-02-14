@@ -253,7 +253,7 @@ export const clearCachedData = async (options = {}) => {
 		stock: 0,
 		item_prices: 0,
 		payment_methods: 0,
-		translations: 0,
+		translations: null,
 		invoices: 0,
 		payments: 0,
 		drafts: 0,
@@ -270,7 +270,10 @@ export const clearCachedData = async (options = {}) => {
 		results.stock = await db.stock.clear()
 		results.item_prices = await db.item_prices.clear()
 		results.payment_methods = await db.payment_methods.clear()
-		results.translations = await db.translations.clear()
+		// Invalidate translations by setting timestamp to 0 (forces re-fetch on next load)
+		// We don't clear them to avoid breaking the current session's __() function
+		await db.translations.toCollection().modify({ timestamp: 0 })
+		results.translations = "invalidated"
 		results.expense_categories = await db.expense_categories.clear()
 		results.expenses_cache = await db.expenses_cache.clear()
 
@@ -346,11 +349,12 @@ export const clearBrowserCache = () => {
 	}
 
 	try {
-		// Clear POS-specific localStorage items
+		// Clear POS-specific localStorage items only
+		// IMPORTANT: Do NOT clear frappe_* keys — they contain session/auth data
 		const keysToRemove = []
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i)
-			if (key?.startsWith('pos_next_') || key?.startsWith('frappe_')) {
+			if (key?.startsWith('pos_next_')) {
 				keysToRemove.push(key)
 			}
 		}
@@ -360,11 +364,11 @@ export const clearBrowserCache = () => {
 			results.localStorage++
 		})
 
-		// Clear sessionStorage
+		// Clear POS-specific sessionStorage items only
 		const sessionKeys = []
 		for (let i = 0; i < sessionStorage.length; i++) {
 			const key = sessionStorage.key(i)
-			if (key?.startsWith('pos_next_') || key?.startsWith('frappe_')) {
+			if (key?.startsWith('pos_next_')) {
 				sessionKeys.push(key)
 			}
 		}
