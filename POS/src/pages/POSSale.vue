@@ -2236,10 +2236,11 @@ async function confirmClearCache() {
 	try {
 		log.info("Clearing cached data...");
 
-		// Import the clear function from db.js
-		const { clearCachedData } = await import("@/utils/offline/db.js");
+		// 1. Stop the offline worker first to prevent it from accessing IndexedDB during clear
+		offlineWorker.terminate();
 
-		// Clear IndexedDB cache (preserves invoices, drafts, and settings by default)
+		// 2. Clear IndexedDB cache (preserves invoices, drafts, and settings by default)
+		const { clearCachedData } = await import("@/utils/offline/db.js");
 		await clearCachedData({
 			preserveInvoices: true,
 			preserveDrafts: true,
@@ -2248,13 +2249,17 @@ async function confirmClearCache() {
 
 		log.success("Cache cleared, reloading page...");
 
-		// Unregister service workers to prevent stale interception on reload
-		if (navigator.serviceWorker) {
-			const regs = await navigator.serviceWorker.getRegistrations();
-			await Promise.all(regs.map(r => r.unregister()));
+		// 3. Unregister service workers to prevent stale interception on reload
+		try {
+			if (navigator.serviceWorker) {
+				const regs = await navigator.serviceWorker.getRegistrations();
+				await Promise.all(regs.map(r => r.unregister()));
+			}
+		} catch (e) {
+			// Ignore SW errors — reload will handle it
 		}
 
-		// Force a full page reload to cleanly re-initialize everything
+		// 4. Full page reload to re-initialize everything cleanly
 		window.location.reload();
 	} catch (error) {
 		log.error("Error clearing cache:", error);
