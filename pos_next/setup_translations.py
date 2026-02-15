@@ -1,10 +1,17 @@
 """
+DEPRECATED: Translations are now managed centrally by rustic_translator.
+See rustic_translator/rustic_translator/setup_translations.py and
+rustic_translator/rustic_translator/translations/ar.csv
+
+This file is kept as a reference. The after_migrate hook has been
+disabled in hooks.py. Do NOT re-enable it — doing so would create
+duplicate Translation DocType entries.
+
+--- Original description ---
 Centralized Arabic translations for the POSNext POS system.
 
 Translations are inserted into the Translation DocType (Frappe's global translation system)
 so POSNext picks them up via get_all_translations("ar").
-
-Runs on every `bench migrate` via after_migrate hook.
 """
 
 import frappe

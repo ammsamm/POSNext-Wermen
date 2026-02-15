@@ -138,7 +138,9 @@ fixtures = [
 after_install = "pos_next.install.after_install"
 after_migrate = [
     "pos_next.install.after_migrate",
-    "pos_next.setup_translations.setup_translations",
+    # Translations are now managed centrally by rustic_translator.
+    # See rustic_translator/setup_translations.py
+    # "pos_next.setup_translations.setup_translations",
 ]
 
 # Uninstallation
